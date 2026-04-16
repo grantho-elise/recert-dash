@@ -382,9 +382,9 @@
     </div>
     <div class="custom-range" id="custom-range">
       <label>From</label>
-      <input type="date" id="date-from" onchange="applyCustomRange()" min="2026-03-16" max="2026-04-15">
+      <input type="date" id="date-from" onchange="applyCustomRange()" min="2026-03-16">
       <label>To</label>
-      <input type="date" id="date-to" onchange="applyCustomRange()" min="2026-03-16" max="2026-04-15">
+      <input type="date" id="date-to" onchange="applyCustomRange()" min="2026-03-16">
     </div>
     <button class="refresh-btn" id="refresh-btn" onclick="refreshDashboard()">
       <span class="refresh-icon">
@@ -589,12 +589,12 @@
 </main>
 
 <footer>
-  Elise AI · Recertification Funnel Dashboard · Hex + LogRocket · Last refreshed April 14, 2026
+  Elise AI · Recertification Funnel Dashboard · Hex + LogRocket
 </footer>
 
 <script>
   // ── Raw Data ──────────────────────────────────────────────────────────────
-  const TODAY = new Date('2026-04-15');
+  const TODAY = new Date();
 
   // ─── Live org IDs ────────────────────────────────────────────────────────────
   // Currently live: 526 (LSCRE / 5 Oaks)
@@ -908,20 +908,16 @@
   }
 
   function applySessionsUpdate(sessions) {
-    const table = document.getElementById('sessions-table-body');
-    if (!table) return;
-    table.innerHTML = '';
-    sessions.forEach(s => {
-      const dev = s.device === 'iPhone' || s.device === 'Mobile' ? '📱' : s.device === 'Mac' ? '💻' : '🖥️';
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td><a href="${s.url}" target="_blank" rel="noopener" style="color:#A5B4FC;text-decoration:none;font-weight:500">${s.name}</a><br><span style="color:#64748B;font-size:11px">${s.email}</span></td>
-        <td style="color:#94A3B8;font-size:12px">${s.date}</td>
-        <td style="color:#94A3B8;font-size:12px">${dev} ${s.device}</td>
-        <td style="color:#64748B;font-size:11px">${s.browser}</td>
-        <td style="color:#64748B;font-size:11px">${s.os}</td>`;
-      table.appendChild(row);
-    });
+    if (!Array.isArray(sessions) || !sessions.length) return;
+    // Replace in-memory data and re-render via the same buildSessionsTable path
+    sessionsData.length = 0;
+    sessions.forEach(s => sessionsData.push(s));
+    // Reset any active search/filter so the full fresh list shows
+    const searchEl = document.getElementById('session-search');
+    const filterEl = document.getElementById('platform-filter');
+    if (searchEl) searchEl.value = '';
+    if (filterEl) filterEl.value = '';
+    buildSessionsTable(sessionsData);
   }
 
   // ── Refresh Button ────────────────────────────────────────────────────────
