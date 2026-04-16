@@ -43,7 +43,6 @@ module.exports = async (req, res) => {
     const bustUrl = `${gistUrl}?t=${Date.now()}`;
     const resp = await fetch(bustUrl, {
       headers: { 'Cache-Control': 'no-cache' },
-      signal: AbortSignal.timeout(10000),
     });
 
     if (!resp.ok) {
