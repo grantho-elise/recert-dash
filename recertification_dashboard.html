@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recertification Funnel Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #F1F5F9; color: #1E293B; min-height: 100vh; }
+
+    /* ── Header ── */
+    header {
+      background: #0F172A;
+      color: white;
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .header-left h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+    .header-left p { font-size: 11px; color: #64748B; margin-top: 4px; }
+    .period-badge {
+      display: inline-block;
+      background: rgba(99,102,241,0.25);
+      color: #A5B4FC;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Date Controls ── */
+    .date-controls { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .preset-btns { display: flex; gap: 6px; }
+    .date-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: transparent;
+      color: #94A3B8;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .date-btn:hover { border-color: #6366F1; color: white; }
+    .date-btn.active { background: #6366F1; border-color: #6366F1; color: white; }
+    .custom-range { display: none; gap: 8px; align-items: center; }
+    .custom-range.show { display: flex; }
+    .custom-range label { font-size: 11px; color: #64748B; }
+    .custom-range input[type="date"] {
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #1E293B;
+      color: #E2E8F0;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .custom-range input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); }
+
+    /* ── Main Layout ── */
+    main { padding: 24px 32px; max-width: 1440px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94A3B8;
+      margin-bottom: 12px;
+      margin-top: 28px;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── Metric Cards ── */
+    .metric-cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .metric-cards-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 600px;
+    }
+    .metric-cards-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 1100px) { .metric-cards { grid-template-columns: repeat(3, 1fr); } .metric-cards-3 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 700px) { .metric-cards { grid-template-columns: repeat(2, 1fr); } .metric-cards-3 { grid-template-columns: 1fr; } }
+
+    .metric-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+      border-top: 3px solid transparent;
+      transition: box-shadow 0.15s;
+    }
+    .metric-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .metric-card .m-label { font-size: 11px; font-weight: 600; color: #64748B; letter-spacing: 0.02em; text-transform: uppercase; margin-bottom: 10px; }
+    .metric-card .m-value { font-size: 36px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+    .metric-card .m-unit { font-size: 16px; font-weight: 600; margin-left: 2px; }
+    .metric-card .m-sub { font-size: 11px; color: #94A3B8; margin-top: 8px; }
+    .metric-card .m-pct { font-size: 13px; font-weight: 600; margin-top: 4px; }
+    .metric-card .m-source { font-size: 10px; color: #CBD5E1; margin-top: 6px; letter-spacing: 0.03em; text-transform: uppercase; }
+
+    /* ── Charts ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px) { .charts-row { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    .chart-header { margin-bottom: 20px; }
+    .chart-title { font-size: 14px; font-weight: 700; color: #0F172A; }
+    .chart-subtitle { font-size: 12px; color: #94A3B8; margin-top: 3px; }
+    .chart-container { position: relative; height: 280px; }
+
+    /* ── Property Table ── */
+    .table-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    .property-table { min-width: 700px; }
+    thead th {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94A3B8;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 2px solid #E2E8F0;
+      white-space: nowrap;
+    }
+    thead th:not(:first-child) { text-align: center; }
+    tbody td {
+      padding: 12px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid #F1F5F9;
+      vertical-align: middle;
+    }
+    tbody td:not(:first-child) { text-align: center; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #FAFBFF; }
+    .total-row td { font-weight: 700; background: #F8FAFC !important; border-top: 2px solid #E2E8F0; }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 32px;
+      text-align: center;
+    }
+    .pill-purple { background: #EDE9FE; color: #6D28D9; }
+    .pill-blue   { background: #DBEAFE; color: #1D4ED8; }
+    .pill-amber  { background: #FEF3C7; color: #92400E; }
+    .pill-green  { background: #D1FAE5; color: #065F46; }
+    .pill-red    { background: #FEE2E2; color: #991B1B; }
+    .pill-gray   { background: #F1F5F9; color: #64748B; }
+
+    .bar-wrap { display: flex; align-items: center; gap: 8px; justify-content: center; }
+    .bar-bg { background: #F1F5F9; border-radius: 4px; height: 6px; width: 80px; flex-shrink: 0; }
+    .bar-fill { height: 100%; border-radius: 4px; background: #6366F1; min-width: 2px; }
+
+    /* ── Sessions Table ── */
+    .sessions-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    .sessions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .sessions-search {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+      font-size: 13px;
+      width: 220px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus { border-color: #6366F1; }
+    .filter-select {
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+      font-size: 13px;
+      color: #374151;
+      background: white;
+      cursor: pointer;
+      outline: none;
+    }
+    .session-count {
+      font-size: 12px;
+      color: #94A3B8;
+      padding: 6px 12px;
+      background: #F8FAFC;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .sessions-table { min-width: 900px; }
+    .sessions-table thead th { text-align: left !important; }
+    .sessions-table tbody td { text-align: left !important; }
+    .session-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #6366F1;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 3px 8px;
+      background: #EDE9FE;
+      border-radius: 6px;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .session-link:hover { background: #DDD6FE; }
+    .platform-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #64748B;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      padding: 2px 7px;
+      white-space: nowrap;
+    }
+    .anon-name { color: #94A3B8; font-style: italic; }
+    .no-data-msg { text-align: center; padding: 40px; color: #94A3B8; font-size: 13px; }
+    .note { font-size: 11px; color: #94A3B8; margin-top: 14px; }
+    .lr-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #7C3AED;
+      background: #EDE9FE;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: opacity 0.15s, box-shadow 0.15s;
+    }
+    a.lr-badge:hover {
+      opacity: 0.82;
+      box-shadow: 0 0 0 2px rgba(124,58,237,0.25);
+    }
+    a.lr-badge[style*="0369A1"]:hover {
+      box-shadow: 0 0 0 2px rgba(3,105,161,0.25);
+    }
+
+    .refresh-stamp {
+      font-size: 11px;
+      color: #64748B;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .refresh-dot {
+      width: 6px; height: 6px;
+      background: #22C55E;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .refresh-dot.stale { background: #F59E0B; }
+
+    /* ── Refresh Button ── */
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: transparent;
+      color: #94A3B8;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+    .refresh-btn:hover { border-color: #22C55E; color: #22C55E; }
+    .refresh-btn:active { opacity: 0.75; }
+    .refresh-btn:disabled { opacity: 0.5; cursor: default; pointer-events: none; }
+    .refresh-icon { display: inline-flex; flex-shrink: 0; }
+
+    /* ── Skeleton Loading ── */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .skel {
+      display: inline-block;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+    }
+    .skel-value  { height: 36px; width: 80px; }
+    .skel-unit   { height: 18px; width: 28px; margin-left: 4px; vertical-align: middle; }
+    .skel-sub    { height: 11px; width: 120px; margin-top: 8px; }
+    .skel-pct    { height: 14px; width: 48px; margin-top: 4px; }
+    .skel-source { height: 10px; width: 100px; margin-top: 6px; }
+    /* chart overlay */
+    .chart-skel-overlay {
+      position: absolute; inset: 0;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      z-index: 10;
+    }
+    /* table skeleton rows */
+    .skel-cell { display: block; height: 13px; border-radius: 4px; }
+    .skel-cell-wide { width: 130px; }
+    .skel-cell-narrow { width: 38px; }
+    .no-denial-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: #94A3B8;
+      gap: 8px;
+    }
+    .no-denial-placeholder .nd-icon { font-size: 32px; opacity: 0.4; }
+    .no-denial-placeholder .nd-msg { font-size: 13px; font-weight: 600; color: #64748B; }
+    .no-denial-placeholder .nd-sub { font-size: 11px; text-align: center; max-width: 280px; }
+    footer { text-align: center; padding: 24px; font-size: 11px; color: #94A3B8; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>
+      Recertification Funnel
+      <span class="period-badge" id="period-badge">All Time</span>
+    </h1>
+    <p>Sources: ELISE.DA.FCT_APPLICATIONS · Snowflake · application_type=AffordableRecertification · is_test=FALSE · all-time · 2 live orgs: LSCRE + Enterprise Residential</p>
+    <div class="refresh-stamp"><span class="refresh-dot"></span> Last refreshed: <span id="refresh-ts">—</span></div>
+  </div>
+  <div class="date-controls">
+    <div class="preset-btns">
+      <button class="date-btn active" onclick="setRange('all')">All Time</button>
+      <button class="date-btn" onclick="setRange('30d')">Last 30 Days</button>
+      <button class="date-btn" onclick="setRange('7d')">Last 7 Days</button>
+      <button class="date-btn" onclick="setRange('custom')">Custom</button>
+    </div>
+    <div class="custom-range" id="custom-range">
+      <label>From</label>
+      <input type="date" id="date-from" onchange="applyCustomRange()" min="2026-03-16">
+      <label>To</label>
+      <input type="date" id="date-to" onchange="applyCustomRange()" min="2026-03-16">
+    </div>
+    <button class="refresh-btn" id="refresh-btn" onclick="refreshDashboard()">
+      <span class="refresh-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+      </span>
+      Refresh Data
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Funnel Metrics (Hex) ── -->
+  <div class="section-label">Recertification Funnel — Topline <a class="lr-badge" style="background:#E0F2FE;color:#0369A1" href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/thread/019d872c-79e4-711a-a84b-a5f3dda9b526?scrollToCell=019d92b8-9c8d-7009-b2b5-83453ada486c" target="_blank" rel="noopener">FCT_APPLICATIONS · Snowflake · ELISE.DA <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="metric-cards">
+    <div class="metric-card" style="border-top-color:#6366F1">
+      <div class="m-label">Recertifications Sent</div>
+      <div class="m-value" id="m-residents" style="color:#6366F1">—</div>
+      <div class="m-sub">Recertification process initiated</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#F59E0B">
+      <div class="m-label">In Progress</div>
+      <div class="m-value" id="m-inprogress" style="color:#F59E0B">—</div>
+      <div class="m-sub">Docs submitted or under review</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#10B981">
+      <div class="m-label">Approved</div>
+      <div class="m-value" id="m-approved" style="color:#10B981">—</div>
+      <div class="m-pct" id="m-approved-pct" style="color:#10B981">—</div>
+      <div class="m-sub">Certification approved</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#EF4444">
+      <div class="m-label">Denied</div>
+      <div class="m-value" id="m-denied" style="color:#EF4444">—</div>
+      <div class="m-sub">Certification denied</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#3B82F6">
+      <div class="m-label">Certifications Submitted</div>
+      <div class="m-value" id="m-certs" style="color:#3B82F6">—</div>
+      <div class="m-pct" id="m-certs-pct" style="color:#3B82F6">—</div>
+      <div class="m-sub">Across all live properties</div>
+    </div>
+  </div>
+
+  <!-- ── Avg Certification Timeline (affordable_certifications) ── -->
+  <div class="section-label" style="margin-top:20px">Avg Certification Timeline — Approved Records <a class="lr-badge" style="background:#DCFCE7;color:#166534" href="#" target="_blank" rel="noopener">FCT_APPLICATIONS · Snowflake · ELISE.DA <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="metric-cards-2">
+    <div class="metric-card" style="border-top-color:#0EA5E9">
+      <div class="m-label">Avg Time to Decision</div>
+      <div class="m-value" style="color:#0EA5E9" id="m-avg-days">—</div>
+      <div class="m-sub">From <em>created</em> → <em>approved</em></div>
+      <div class="m-source" style="margin-top:8px" id="m-timing-n-avg">— · all-time</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#8B5CF6">
+      <div class="m-label">Median Time to Decision</div>
+      <div class="m-value" style="color:#8B5CF6" id="m-median-days">—</div>
+      <div class="m-sub">From <em>created</em> → <em>approved</em></div>
+      <div class="m-source" style="margin-top:8px" id="m-timing-n-median">— · all-time</div>
+    </div>
+  </div>
+
+  <!-- ── Charts ── -->
+  <div class="section-label">Trends &amp; Funnel</div>
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Week-over-Week Activity</div>
+        <div class="chart-subtitle" id="trend-subtitle">All weeks · data is weekly-bucketed by event date</div>
+      </div>
+      <div class="chart-container"><canvas id="trend-chart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">All-Time Funnel</div>
+        <div class="chart-subtitle">Overall conversion from invite → approval</div>
+      </div>
+      <div class="chart-container"><canvas id="funnel-chart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── Property Breakdown ── -->
+  <div class="section-label">Property Breakdown</div>
+  <div class="table-card">
+    <div class="chart-header">
+      <div class="chart-title">Building-Level Recertification Details</div>
+      <div class="chart-subtitle">2 live properties · LSCRE + Enterprise Residential · all-time · ELISE.DA.FCT_APPLICATIONS · Snowflake</div>
+    </div>
+    <table class="property-table">
+      <thead>
+        <tr>
+          <th>Building</th>
+          <th>Recertifications Sent</th>
+          <th>In Progress</th>
+          <th>Submitted</th>
+          <th>% Submitted</th>
+          <th>Approved</th>
+          <th>% Approved</th>
+          <th>Denied</th>
+        </tr>
+      </thead>
+      <tbody id="property-tbody"></tbody>
+    </table>
+    <p class="note">* Building-level data reflects all-time totals. Date range filter applies to topline cards and trend chart only.</p>
+  </div>
+
+  <!-- ── Session Playlist ── -->
+  <div class="section-label">Previous Day's Sessions <a class="lr-badge" href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" rel="noopener">LogRocket · Segment 1307648 <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+
+  <div id="lr-fallback-card" class="sessions-card">
+    <div class="sessions-header">
+      <div>
+        <div class="chart-title">Affordable Recertification Flow Users</div>
+        <div class="chart-subtitle" id="sessions-subtitle">Visited <code style="font-size:11px;background:#F5F3FF;padding:1px 4px;border-radius:3px">step=affordable-questionnaire</code> · time on page &gt; 1s · internal emails excluded · updated daily 9am</div>
+      </div>
+      <div class="sessions-search">
+        <input class="search-input" id="session-search" type="text" placeholder="Search name or email…" oninput="filterSessions()">
+        <select class="filter-select" id="platform-filter" onchange="filterSessions()">
+          <option value="">All Platforms</option>
+          <option value="iPhone">iPhone</option>
+          <option value="Desktop">Desktop</option>
+          <option value="Mobile">Mobile (Android)</option>
+          <option value="Mac">Mac</option>
+        </select>
+        <span class="session-count" id="session-count">15 sessions</span>
+      </div>
+    </div>
+
+    <!-- LogRocket CTA banner -->
+    <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M"
+       target="_blank" rel="noopener"
+       style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(135deg,#1E1B4B,#312E81);border-radius:10px;margin-bottom:18px;text-decoration:none;border:1px solid #4338CA;transition:opacity 0.15s;"
+       onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="display:inline-flex;align-items:center;gap:5px;background:#7C3AED;color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;letter-spacing:0.04em;white-space:nowrap;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white"/></svg>
+          LOGROCKET
+        </span>
+        <div>
+          <div style="color:white;font-size:13px;font-weight:600;">Open Live Session Playlist</div>
+          <div style="color:#A5B4FC;font-size:11px;margin-top:1px;">Segment 1307648 · Affordable Recertification Flow · Last 30 days</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;color:#C4B5FD;font-size:13px;font-weight:600;white-space:nowrap;">
+        Watch sessions
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <div style="overflow-x:auto">
+      <table class="sessions-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Session</th>
+            <th>Date (UTC)</th>
+            <th>Platform</th>
+          </tr>
+        </thead>
+        <tbody id="sessions-tbody"></tbody>
+      </table>
+    </div>
+    <p class="note">Cached sessions — refresh to pull latest from LogRocket. <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" style="color:#6366F1">View full playlist ↗</a></p>
+  </div>
+
+</main>
+
+<footer>
+  Elise AI · Recertification Funnel Dashboard · Hex + LogRocket
+</footer>
+
+<script>
+  // ── Raw Data ──────────────────────────────────────────────────────────────
+  const TODAY = new Date();
+
+  // ─── Live org IDs ────────────────────────────────────────────────────────────
+  // Currently live: 526 (LSCRE / 5 Oaks)
+  // To add a new org when it goes live: re-run the weekly + property queries
+  // against affordable_certifications WHERE organization_id IN (<ids>)
+  // JOIN public.residents r ON r.id = affordable_certifications.resident_id
+  // ⚠ NOTE: weeklyData is from affordable_certifications (all historical cycles).
+  // Property totals use correct Elise UI numbers (current active cycle only, recertification table).
+  // Weekly trend will be corrected once DB grant for public.recertification is obtained.
+  // to exclude orphaned/test resident IDs, then paste results below.
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Source: ELISE.DA.FCT_APPLICATIONS · Snowflake
+  // Filters: application_type='AffordableRecertification', is_test=FALSE — ALL TIME, both orgs
+  // Live orgs: LSCRE (5 Oaks) + Enterprise Residential (Park View at Miramar Landing)
+  // Status mapping: certsStarted = Certifications Submitted; inProgress = InReview; approved = Approved; denied = Denied+Cancelled
+  // To add a new org: re-run weekly + property queries with b.IS_TEST = FALSE (no org filter needed)
+  // Data arrays — populated on load by autoLoad() from the GitHub Gist (no hardcoded fallback)
+  const weeklyData   = [];
+  const propertyData = [];
+
+  // Sessions populated by autoLoad() from Gist — updated daily at 10am by scheduled task
+  const sessionsData = [];
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function filterWeeks(range) {
+    if (range === 'all') return weeklyData;
+    let cutoff;
+    if (range === '30d') cutoff = new Date(TODAY.getTime() - 30 * 864e5);
+    else if (range === '7d') cutoff = new Date(TODAY.getTime() - 7 * 864e5);
+    else if (range.from && range.to) return weeklyData.filter(d => d.week >= range.from && d.week <= range.to);
+    return weeklyData.filter(d => {
+      const weekEnd = new Date(new Date(d.week).getTime() + 6 * 864e5);
+      return weekEnd >= cutoff;
+    });
+  }
+
+  function sum(data) {
+    return data.reduce((acc, d) => ({
+      residentsStarted: acc.residentsStarted + d.residentsStarted,
+      certsStarted: acc.certsStarted + d.certsStarted,
+      inProgress: acc.inProgress + d.inProgress,
+      approved: acc.approved + d.approved,
+      denied: acc.denied + d.denied,
+    }), { residentsStarted: 0, certsStarted: 0, inProgress: 0, approved: 0, denied: 0 });
+  }
+
+  function pct(num, denom) {
+    if (!denom) return '0.0%';
+    return ((num / denom) * 100).toFixed(1) + '%';
+  }
+
+  function deviceIcon(device) {
+    if (device === 'iPhone') return '📱';
+    if (device === 'Mobile') return '📱';
+    if (device === 'Mac') return '💻';
+    return '🖥️';
+  }
+
+  // ── Topline Cards ─────────────────────────────────────────────────────────
+  function updateCards(totals) {
+    document.getElementById('m-residents').textContent  = totals.residentsStarted.toLocaleString();
+    document.getElementById('m-certs').textContent      = totals.certsStarted.toLocaleString();
+    document.getElementById('m-inprogress').textContent = totals.inProgress.toLocaleString();
+    document.getElementById('m-approved').textContent   = totals.approved.toLocaleString();
+    document.getElementById('m-denied').textContent     = totals.denied.toLocaleString();
+    document.getElementById('m-certs-pct').textContent  = pct(totals.certsStarted, totals.residentsStarted);
+    document.getElementById('m-approved-pct').textContent = pct(totals.approved, totals.residentsStarted);
+  }
+
+  // ── Trend Chart ───────────────────────────────────────────────────────────
+  let currentRange = 'all';
+  let trendChart;
+  let funnelChart;
+  const COLORS = { residentsStarted:'#6366F1', certsStarted:'#3B82F6', inProgress:'#F59E0B', approved:'#10B981', denied:'#EF4444' };
+  const METRIC_LABELS = { residentsStarted:'Recertifications Sent', certsStarted:'Certifications Submitted', inProgress:'In Progress', approved:'Approved', denied:'Denied' };
+
+  function updateTrendChart(data) {
+    const labels = data.map(d => d.label);
+    const datasets = Object.keys(COLORS).map(key => ({
+      label: METRIC_LABELS[key],
+      data: data.map(d => d[key]),
+      borderColor: COLORS[key],
+      backgroundColor: COLORS[key] + '18',
+      borderWidth: 2.5,
+      pointRadius: 5, pointHoverRadius: 8,
+      pointBackgroundColor: COLORS[key],
+      tension: 0.3, fill: false,
+    }));
+    if (trendChart) {
+      trendChart.data.labels = labels;
+      trendChart.data.datasets.forEach((ds, i) => { ds.data = datasets[i].data; });
+      trendChart.update('active');
+    } else {
+      trendChart = new Chart(document.getElementById('trend-chart'), {
+        type: 'line', data: { labels, datasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 10, padding: 16, font: { size: 12 }, usePointStyle: true } },
+            tooltip: { padding: 12, bodySpacing: 6 }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#64748B' } },
+            y: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { font: { size: 12 }, color: '#64748B' } }
+          }
+        }
+      });
+    }
+  }
+
+  // ── Funnel Chart ──────────────────────────────────────────────────────────
+  function buildFunnelChart() {
+    if (funnelChart) { funnelChart.destroy(); funnelChart = null; }
+    const t = sum(weeklyData);
+    const values = [t.residentsStarted, t.certsStarted, t.inProgress, t.approved, t.denied];
+    const labels = ['Recertifications Sent','Certifications Submitted','In Progress','Approved','Denied'];
+    const colors = Object.values(COLORS);
+    funnelChart = new Chart(document.getElementById('funnel-chart'), {
+      type: 'bar',
+      data: { labels, datasets: [{ data: values, backgroundColor: colors.map(c => c+'28'), borderColor: colors, borderWidth: 2, borderRadius: 6, borderSkipped: false }] },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { padding: 12, callbacks: { label: ctx => { const p = values[0]>0 ? ((ctx.parsed.x/values[0])*100).toFixed(1) : 0; return ` ${ctx.parsed.x}  (${p}% of started)`; } } }
+        },
+        scales: {
+          x: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { font: { size: 12 }, color: '#64748B' } },
+          y: { grid: { display: false }, ticks: { font: { size: 12, weight: '600' }, color: '#374151' } }
+        }
+      }
+    });
+  }
+
+  // ── Property Table ────────────────────────────────────────────────────────
+  function buildPropertyTable() {
+    const total = sum(propertyData);
+    const rows = [...propertyData, { name: 'Total', ...total, isTotal: true }];
+    document.getElementById('property-tbody').innerHTML = rows.map(row => {
+      const pctCS = row.residentsStarted > 0 ? ((row.certsStarted/row.residentsStarted)*100).toFixed(1) : '0.0';
+      const pctAp = row.residentsStarted > 0 ? ((row.approved/row.residentsStarted)*100).toFixed(1) : '0.0';
+      return `<tr ${row.isTotal?'class="total-row"':''}>
+        <td><strong>${row.name}</strong></td>
+        <td><span class="pill pill-purple">${row.residentsStarted}</span></td>
+        <td><span class="pill pill-amber">${row.inProgress}</span></td>
+        <td><span class="pill pill-blue">${row.certsStarted}</span></td>
+        <td><div class="bar-wrap"><span style="min-width:38px;font-size:12px;font-weight:600;color:#6D28D9">${pctCS}%</span><div class="bar-bg"><div class="bar-fill" style="width:${Math.min(parseFloat(pctCS),100)}%"></div></div></div></td>
+        <td><span class="pill pill-green">${row.approved}</span></td>
+        <td style="font-size:12px;font-weight:600;color:#065F46">${pctAp}%</td>
+        <td>${row.denied>0?`<span class="pill pill-red">${row.denied}</span>`:`<span class="pill pill-gray">${row.denied}</span>`}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── Sessions Table ────────────────────────────────────────────────────────
+  function buildSessionsTable(data) {
+    const tbody = document.getElementById('sessions-tbody');
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="no-data-msg">No sessions match the current filter.</div></td></tr>`;
+      document.getElementById('session-count').textContent = '0 sessions';
+      return;
+    }
+    document.getElementById('session-count').textContent = `${data.length} session${data.length !== 1 ? 's' : ''}`;
+    tbody.innerHTML = data.map((s, i) => {
+      const nameCell = s.name
+        ? `<strong>${s.name}</strong>`
+        : `<span class="anon-name">Anonymous</span>`;
+      const emailCell = s.email
+        ? `<a href="mailto:${s.email}" style="color:#374151;text-decoration:none">${s.email}</a>`
+        : `<span style="color:#CBD5E1">—</span>`;
+      const platformCell = `<span class="platform-chip">${deviceIcon(s.device)} ${s.os} · ${s.browser}</span>`;
+      return `<tr>
+        <td style="color:#94A3B8;font-size:12px">${i + 1}</td>
+        <td>${nameCell}</td>
+        <td style="font-size:12px">${emailCell}</td>
+        <td><a class="session-link" href="${s.url}" target="_blank">▶ Watch</a></td>
+        <td style="font-size:12px;white-space:nowrap;color:#374151">${s.date}</td>
+        <td>${platformCell}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function filterSessions() {
+    const q = document.getElementById('session-search').value.toLowerCase().trim();
+    const platform = document.getElementById('platform-filter').value;
+    const filtered = sessionsData.filter(s => {
+      const matchText = !q || (s.name && s.name.toLowerCase().includes(q)) || (s.email && s.email.toLowerCase().includes(q));
+      const matchPlatform = !platform || s.device === platform || (platform === 'Mobile' && s.device === 'Mobile');
+      return matchText && matchPlatform;
+    });
+    buildSessionsTable(filtered);
+  }
+
+  // ── Range Logic ───────────────────────────────────────────────────────────
+  function setRange(range) {
+    if (range !== 'custom') currentRange = range;
+    document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+    const btnMap = { all:0, '30d':1, '7d':2, custom:3 };
+    document.querySelectorAll('.date-btn')[btnMap[range]].classList.add('active');
+    const customEl = document.getElementById('custom-range');
+    if (range === 'custom') { customEl.classList.add('show'); return; }
+    customEl.classList.remove('show');
+    const labels = { all:'All Time', '30d':'Last 30 Days', '7d':'Last 7 Days' };
+    document.getElementById('period-badge').textContent = labels[range];
+    document.getElementById('trend-subtitle').textContent = `${labels[range]} · data bucketed by event date`;
+    // Top-line cards always reflect the full property table totals (independent of chart filter)
+    updateCards(sum(propertyData));
+    const filtered = filterWeeks(range);
+    if (!filtered.length) {
+      document.getElementById('trend-chart').style.display = 'none';
+    } else {
+      document.getElementById('trend-chart').style.display = '';
+      updateTrendChart(filtered);
+    }
+  }
+
+  function applyCustomRange() {
+    const from = document.getElementById('date-from').value;
+    const to = document.getElementById('date-to').value;
+    if (!from || !to || from > to) return;
+    document.getElementById('period-badge').textContent = `${from} → ${to}`;
+    document.getElementById('trend-subtitle').textContent = `${from} → ${to} · data bucketed by event date`;
+    // Top-line cards always reflect the full property table totals (independent of chart filter)
+    updateCards(sum(propertyData));
+    const filtered = filterWeeks({ from, to });
+    if (!filtered.length) {
+      document.getElementById('trend-chart').style.display = 'none';
+    } else {
+      document.getElementById('trend-chart').style.display = '';
+      updateTrendChart(filtered);
+    }
+  }
+
+  // ── Refresh Timestamp ────────────────────────────────────────────────────
+  function updateRefreshStamp(isoStr) {
+    const el = document.getElementById('refresh-ts');
+    if (!el) return;
+    const d = isoStr ? new Date(isoStr) : new Date();
+    el.textContent = 'Data as of ' + d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+  function showToast(msg, duration = 5000, type = 'info') {
+    let toast = document.getElementById('dash-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'dash-toast';
+      toast.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.4);z-index:9999;border:1px solid;transition:opacity 0.3s;max-width:520px;text-align:center;';
+      document.body.appendChild(toast);
+    }
+    const styles = { info: 'background:#1E293B;color:#E2E8F0;border-color:#334155', success: 'background:#064E3B;color:#6EE7B7;border-color:#065F46', error: 'background:#450A0A;color:#FCA5A5;border-color:#7F1D1D' };
+    Object.assign(toast.style, { opacity: '1' });
+    toast.style.cssText = toast.style.cssText.split(';').filter(s => !s.includes('background') && !s.includes('color') && !s.includes('border-color')).join(';') + ';' + styles[type];
+    toast.style.opacity = '1';
+    toast.textContent = msg;
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { toast.style.opacity = '0'; }, duration);
+  }
+
+  // ── Apply live data updates ───────────────────────────────────────────────
+  // Populates propertyData, weeklyData, and timing cards from Gist data.
+  function applyDataUpdate(data) {
+    // Property breakdown + topline cards
+    if (Array.isArray(data.propertyData) && data.propertyData.length) {
+      propertyData.length = 0;
+      data.propertyData.forEach(r => propertyData.push(r));
+    }
+
+    // Weekly trend data
+    if (Array.isArray(data.weeklyData) && data.weeklyData.length) {
+      weeklyData.length = 0;
+      data.weeklyData.forEach(r => weeklyData.push(r));
+    }
+
+    // Rebuild charts + table if we got new data
+    if (propertyData.length || weeklyData.length) {
+      setRange(currentRange);
+      buildFunnelChart();
+      buildPropertyTable();
+    }
+
+    // Timing cards
+    if (data.timing) {
+      const t = data.timing;
+      const avgEl  = document.getElementById('m-avg-days');
+      const medEl  = document.getElementById('m-median-days');
+      const nAvgEl = document.getElementById('m-timing-n-avg');
+      const nMedEl = document.getElementById('m-timing-n-median');
+      if (avgEl)  avgEl.innerHTML  = `${t.avgDays ?? '—'}<span class="m-unit" style="color:#0EA5E9">d</span>`;
+      if (medEl)  medEl.innerHTML  = `${t.medianDays ?? '—'}<span class="m-unit" style="color:#8B5CF6">d</span>`;
+      const nLabel = `n = ${t.n} approved record${t.n !== 1 ? 's' : ''} · all-time`;
+      if (nAvgEl) nAvgEl.textContent = nLabel;
+      if (nMedEl) nMedEl.textContent = nLabel;
+    }
+  }
+
+  function applySessionsUpdate(sessions) {
+    if (!Array.isArray(sessions) || !sessions.length) return;
+    // Replace in-memory data and re-render via the same buildSessionsTable path
+    sessionsData.length = 0;
+    sessions.forEach(s => sessionsData.push(s));
+    // Reset any active search/filter so the full fresh list shows
+    const searchEl = document.getElementById('session-search');
+    const filterEl = document.getElementById('platform-filter');
+    if (searchEl) searchEl.value = '';
+    if (filterEl) filterEl.value = '';
+    buildSessionsTable(sessionsData);
+  }
+
+  // ── Skeleton helpers ─────────────────────────────────────────────────────
+  function startSkeleton() {
+    // Topline metric values
+    ['m-residents','m-inprogress','m-approved','m-denied','m-certs'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-value"></span>';
+    });
+    ['m-approved-pct','m-certs-pct'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-pct"></span>';
+    });
+    // Timing cards
+    ['m-avg-days','m-median-days'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-value"></span>';
+    });
+    ['m-timing-n-avg','m-timing-n-median'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-source"></span>';
+    });
+
+    // Property table — 3 shimmer rows × 8 columns
+    const tbody = document.getElementById('property-tbody');
+    if (tbody) {
+      tbody.innerHTML = Array(3).fill(0).map(() =>
+        `<tr>${Array(8).fill(0).map((_, i) =>
+          `<td><span class="skel skel-cell ${i === 0 ? 'skel-cell-wide' : 'skel-cell-narrow'}"></span></td>`
+        ).join('')}</tr>`
+      ).join('');
+    }
+
+    // Chart containers — shimmer overlay on top of existing canvas
+    ['trend-chart','funnel-chart'].forEach(id => {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const wrap = canvas.parentElement; // .chart-container already has position:relative
+      if (!wrap.querySelector('.chart-skel-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'chart-skel-overlay';
+        wrap.appendChild(overlay);
+      }
+    });
+  }
+
+  function stopSkeleton() {
+    // Remove chart overlays
+    document.querySelectorAll('.chart-skel-overlay').forEach(el => el.remove());
+
+    // If applyDataUpdate didn't fire (error path), restore dash markers
+    ['m-residents','m-inprogress','m-approved','m-denied','m-certs',
+     'm-approved-pct','m-certs-pct'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.querySelector('.skel')) el.textContent = '—';
+    });
+    ['m-avg-days','m-median-days'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.querySelector('.skel')) el.textContent = '—';
+    });
+    ['m-timing-n-avg','m-timing-n-median'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.querySelector('.skel')) el.textContent = '— · all-time';
+    });
+  }
+
+  // ── Refresh Button ────────────────────────────────────────────────────────
+  // Calls /api/refresh which triggers the Hex project, waits for completion,
+  // then returns the freshly-written Gist data.  Hex runs typically take 15–45s.
+  // No AbortSignal — Vercel's service worker can't clone it via postMessage.
+  async function refreshDashboard() {
+    const btn = document.getElementById('refresh-btn');
+    const dot = document.querySelector('.refresh-dot');
+    btn.disabled = true;
+    if (dot) dot.classList.add('stale');
+    startSkeleton();
+    showToast('Running Snowflake query… this takes ~30s', 65000, 'info');
+
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timed out after 65s')), 65000)
+    );
+
+    try {
+      const resp = await Promise.race([fetch('/api/refresh'), timeout]);
+
+      if (!resp.ok) {
+        const body = await resp.json().catch(() => ({}));
+        const msg = body.error || `HTTP ${resp.status}`;
+        showToast('⚠ Snowflake: ' + msg, 9000, 'error');
+        return;
+      }
+
+      const data = await resp.json();
+      applyDataUpdate(data);
+      updateRefreshStamp(data.refreshed_at);
+
+      if (Array.isArray(data.sessionsData) && data.sessionsData.length) {
+        applySessionsUpdate(data.sessionsData);
+        const sub = document.getElementById('sessions-subtitle');
+        if (sub && data.sessions_date) {
+          sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 10am`;
+        }
+        showToast(`✓ Refreshed — ${data.sessionsData.length} sessions ✓`, 5000, 'success');
+      } else {
+        showToast('✓ Refreshed from Snowflake', 5000, 'success');
+      }
+
+    } catch (err) {
+      const msg = err?.message || String(err) || 'unknown error';
+      showToast('⚠ Snowflake: ' + msg, 9000, 'error');
+    } finally {
+      stopSkeleton();
+      if (dot) dot.classList.remove('stale');
+      btn.disabled = false;
+    }
+  }
+
+  updateRefreshStamp();
+
+  // ── Silent auto-load on page open ────────────────────────────────────────
+  // Fetches all data from the Gist: propertyData, weeklyData, timing, sessionsData.
+  async function autoLoad() {
+    try {
+      const resp = await fetch('/api/data');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      if (!data) return;
+
+      // Populate all data (propertyData, weeklyData, timing)
+      applyDataUpdate(data);
+
+      // Sessions from Gist (written daily by scheduled task at 10am)
+      if (Array.isArray(data.sessionsData) && data.sessionsData.length) {
+        applySessionsUpdate(data.sessionsData);
+        const sub = document.getElementById('sessions-subtitle');
+        if (sub && data.sessions_date) {
+          sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 10am`;
+        }
+      }
+
+      if (data.refreshed_at) updateRefreshStamp(data.refreshed_at);
+
+    } catch (_) {
+      // Silent fail — dashboard stays empty until Gist is reachable
+    }
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  setRange('all');
+  buildFunnelChart();
+  buildPropertyTable();
+  buildSessionsTable(sessionsData);
+  autoLoad(); // silently refresh from Gist in the background
+</script>
+</body>
+</html>
