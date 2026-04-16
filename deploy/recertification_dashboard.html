@@ -438,15 +438,15 @@
   <div class="metric-cards-2">
     <div class="metric-card" style="border-top-color:#0EA5E9">
       <div class="m-label">Avg Time to Decision</div>
-      <div class="m-value" style="color:#0EA5E9" id="m-avg-days">10.5<span class="m-unit" style="color:#0EA5E9">d</span></div>
+      <div class="m-value" style="color:#0EA5E9" id="m-avg-days">—</div>
       <div class="m-sub">From <em>created</em> → <em>approved</em></div>
-      <div class="m-source" style="margin-top:8px" id="m-timing-n-avg">n = 2 approved records · all-time</div>
+      <div class="m-source" style="margin-top:8px" id="m-timing-n-avg">— · all-time</div>
     </div>
     <div class="metric-card" style="border-top-color:#8B5CF6">
       <div class="m-label">Median Time to Decision</div>
-      <div class="m-value" style="color:#8B5CF6" id="m-median-days">10.5<span class="m-unit" style="color:#8B5CF6">d</span></div>
+      <div class="m-value" style="color:#8B5CF6" id="m-median-days">—</div>
       <div class="m-sub">From <em>created</em> → <em>approved</em></div>
-      <div class="m-source" style="margin-top:8px" id="m-timing-n-median">n = 2 approved records · all-time</div>
+      <div class="m-source" style="margin-top:8px" id="m-timing-n-median">— · all-time</div>
     </div>
   </div>
 
@@ -580,36 +580,12 @@
   // Live orgs: LSCRE (5 Oaks) + Enterprise Residential (Park View at Miramar Landing)
   // Status mapping: certsStarted = Certifications Submitted; inProgress = InReview; approved = Approved; denied = Denied+Cancelled
   // To add a new org: re-run weekly + property queries with b.IS_TEST = FALSE (no org filter needed)
-  const weeklyData = [
-    { week: '2026-03-16', label: 'Mar 16',    residentsStarted:1,  certsStarted:1,  inProgress:0,  approved:1, denied:0 },
-    { week: '2026-03-23', label: 'Mar 23',    residentsStarted:3,  certsStarted:2,  inProgress:0,  approved:1, denied:0 },
-    { week: '2026-03-30', label: 'Mar 30',    residentsStarted:13, certsStarted:11, inProgress:2,  approved:0, denied:1 },
-    { week: '2026-04-06', label: 'Apr 6',     residentsStarted:94, certsStarted:3,  inProgress:91, approved:0, denied:0 },
-    { week: '2026-04-13', label: 'Apr 13 ✦',  residentsStarted:8,  certsStarted:0,  inProgress:8,  approved:0, denied:0 },
-  ];
+  // Data arrays — populated on load by autoLoad() from the GitHub Gist (no hardcoded fallback)
+  const weeklyData   = [];
+  const propertyData = [];
 
-  const propertyData = [
-    { name: 'Park View at Miramar Landing (Enterprise Residential)', residentsStarted:78, certsStarted:0,  inProgress:78, approved:0, denied:0 },
-    { name: '5 Oaks (LSCRE)',                                        residentsStarted:41, certsStarted:17, inProgress:23, approved:2, denied:1 },
-  ];
-
-  // sessionsData — updated daily at 10am by the dashboard-logrocket-sessions scheduled task
-  // Last manual refresh: Apr 15, 2026 (via LogRocket MCP · step=affordable-questionnaire · excluding akshayramaswamy1@gmail.com internal tester)
-  const sessionsData = [
-    { name: 'Paul Cummings',   email: 'emmanichols081961@gmail.com',          url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d91d0-d80f-7713-a0eb-0b82e566a8e6/0', date: 'Apr 15, 2026 3:44 PM',  browser: 'Chrome 146',        os: 'Android 16',    device: 'Mobile'  },
-    { name: 'Paul Cummings',   email: 'emmanichols081961@gmail.com',          url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d8df6-552b-72fd-b16d-f76b9a90476e/0', date: 'Apr 14, 2026 9:47 PM',  browser: 'Chrome 146',        os: 'Linux x86_64',  device: 'Desktop' },
-    { name: 'Jessica Lanza',   email: 'lanzajessica440@gmail.com',            url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d80ab-b72f-76ad-9303-e965b30683f9/0', date: 'Apr 12, 2026 7:50 AM',  browser: 'Chrome 146',        os: 'Android 13',    device: 'Mobile'  },
-    { name: 'Paul Cummings',   email: 'emmanichols081961@gmail.com',          url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d6a96-0a65-7dde-b628-7cf4508aa7e0/0', date: 'Apr 8, 2026 12:55 AM',  browser: 'Chrome 146',        os: 'Android 16',    device: 'Mobile'  },
-    { name: 'Christopher Smith', email: 'lamarrsmith05@gmail.com',            url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d55a4-036f-74e8-8329-b3d101997391/0', date: 'Apr 3, 2026 11:18 PM',  browser: 'Mobile Safari 18',  os: 'iOS 18.6.2',    device: 'iPhone'  },
-    { name: 'Reno Crenshaw',   email: 'steelcity043@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d541a-0c65-7191-98b1-ce3b234eb238/0', date: 'Apr 3, 2026 4:11 PM',   browser: 'Mobile Safari 16',  os: 'iOS 16.7.15',   device: 'iPhone'  },
-    { name: 'Shykethia Craig', email: 'shycraig11@icloud.com',                url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d5060-f9e5-7b2f-8eec-3cdb8a7eabec/0', date: 'Apr 2, 2026 10:47 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Shalonda Brown',  email: 'poochie0522@gmail.com',                url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d504f-ebaf-71f5-acef-db1005074d7d/0', date: 'Apr 2, 2026 10:28 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Elias Vela',      email: 'elias.vela@lscre.com',                 url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d4097-2308-71a1-8056-2b2908cff018/0', date: 'Mar 30, 2026 9:12 PM',  browser: 'Chrome 146',        os: 'Windows 11',    device: 'Desktop' },
-    { name: 'Sefra Boland',    email: 'sefravboland@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d4059-5450-7b4b-ae67-51700fda596d/0', date: 'Mar 30, 2026 8:04 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Sefra Boland',    email: 'sefravboland@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d403c-6439-7f15-80a6-2e34db597259/0', date: 'Mar 30, 2026 7:33 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Sefra Boland',    email: 'sefravboland@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d2662-4526-7865-a294-0d93a6c890ff/0', date: 'Mar 25, 2026 7:04 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Elsie Panameno',  email: 'epanameno@enterpriseresidential.org',  url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d1be1-856b-7823-83e4-14aa65a0f613/0', date: 'Mar 23, 2026 6:08 PM',  browser: 'Edge 146',          os: 'Windows 11',    device: 'Desktop' },
-  ];
+  // Sessions populated by autoLoad() from Gist — updated daily at 10am by scheduled task
+  const sessionsData = [];
   // ── Helpers ───────────────────────────────────────────────────────────────
   function filterWeeks(range) {
     if (range === 'all') return weeklyData;
@@ -848,20 +824,28 @@
   }
 
   // ── Apply live data updates ───────────────────────────────────────────────
+  // Populates propertyData, weeklyData, and timing cards from Gist data.
   function applyDataUpdate(data) {
+    // Property breakdown + topline cards
     if (Array.isArray(data.propertyData) && data.propertyData.length) {
       propertyData.length = 0;
       data.propertyData.forEach(r => propertyData.push(r));
     }
+
+    // Weekly trend data
     if (Array.isArray(data.weeklyData) && data.weeklyData.length) {
       weeklyData.length = 0;
       data.weeklyData.forEach(r => weeklyData.push(r));
     }
-    buildPropertyTable();
-    updateCards(sum(propertyData));
-    buildFunnelChart();
-    const filtered = filterWeeks(currentRange);
-    if (filtered.length) updateTrendChart(filtered);
+
+    // Rebuild charts + table if we got new data
+    if (propertyData.length || weeklyData.length) {
+      setRange(currentRange);
+      buildFunnelChart();
+      buildPropertyTable();
+    }
+
+    // Timing cards
     if (data.timing) {
       const t = data.timing;
       const avgEl  = document.getElementById('m-avg-days');
@@ -940,9 +924,7 @@
   updateRefreshStamp();
 
   // ── Silent auto-load on page open ────────────────────────────────────────
-  // Fetches the latest Gist data (written daily by scheduled task at 9am) so
-  // the sessions table and Snowflake numbers are always current without the
-  // user needing to click Refresh.
+  // Fetches all data from the Gist: propertyData, weeklyData, timing, sessionsData.
   async function autoLoad() {
     try {
       const resp = await fetch('/api/data');
@@ -950,45 +932,22 @@
       const data = await resp.json();
       if (!data) return;
 
-      // Update Snowflake data silently
-      if (Array.isArray(data.propertyData) && data.propertyData.length) {
-        propertyData.length = 0;
-        data.propertyData.forEach(r => propertyData.push(r));
-        buildPropertyTable();
-        updateCards(sum(propertyData));
-        buildFunnelChart();
-        const filtered = filterWeeks(currentRange);
-        if (filtered.length) updateTrendChart(filtered);
-      }
+      // Populate all data (propertyData, weeklyData, timing)
+      applyDataUpdate(data);
 
-      // Update timing cards silently
-      if (data.timing) {
-        const t = data.timing;
-        const avgEl  = document.getElementById('m-avg-days');
-        const medEl  = document.getElementById('m-median-days');
-        const nAvgEl = document.getElementById('m-timing-n-avg');
-        const nMedEl = document.getElementById('m-timing-n-median');
-        if (avgEl)  avgEl.innerHTML  = `${t.avgDays ?? '—'}<span class="m-unit" style="color:#0EA5E9">d</span>`;
-        if (medEl)  medEl.innerHTML  = `${t.medianDays ?? '—'}<span class="m-unit" style="color:#8B5CF6">d</span>`;
-        const nLabel = `n = ${t.n} approved record${t.n !== 1 ? 's' : ''} · all-time`;
-        if (nAvgEl) nAvgEl.textContent = nLabel;
-        if (nMedEl) nMedEl.textContent = nLabel;
-      }
-
-      // Update sessions table with yesterday's data from Gist
+      // Sessions from Gist (written daily by scheduled task at 10am)
       if (Array.isArray(data.sessionsData) && data.sessionsData.length) {
         applySessionsUpdate(data.sessionsData);
         const sub = document.getElementById('sessions-subtitle');
         if (sub && data.sessions_date) {
-          sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 9am`;
+          sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 10am`;
         }
       }
 
-      // Update refresh timestamp
       if (data.refreshed_at) updateRefreshStamp(data.refreshed_at);
 
     } catch (_) {
-      // Silent fail — hardcoded data stays visible
+      // Silent fail — dashboard stays empty until Gist is reachable
     }
   }
 

@@ -382,9 +382,9 @@
     </div>
     <div class="custom-range" id="custom-range">
       <label>From</label>
-      <input type="date" id="date-from" onchange="applyCustomRange()" min="2026-03-16">
+      <input type="date" id="date-from" onchange="applyCustomRange()" min="2026-03-16" max="2026-04-15">
       <label>To</label>
-      <input type="date" id="date-to" onchange="applyCustomRange()" min="2026-03-16">
+      <input type="date" id="date-to" onchange="applyCustomRange()" min="2026-03-16" max="2026-04-15">
     </div>
     <button class="refresh-btn" id="refresh-btn" onclick="refreshDashboard()">
       <span class="refresh-icon">
@@ -430,6 +430,23 @@
       <div class="m-value" id="m-certs" style="color:#3B82F6">—</div>
       <div class="m-pct" id="m-certs-pct" style="color:#3B82F6">—</div>
       <div class="m-sub">Across all live properties</div>
+    </div>
+  </div>
+
+  <!-- ── Avg Time Metrics (LogRocket) ── -->
+  <div class="section-label" style="margin-top:20px">Avg Time on Step — Last 30 Days <a class="lr-badge" href="https://app.logrocket.com/0qt8h9/applications-portal" target="_blank" rel="noopener">LogRocket <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="metric-cards-2">
+    <div class="metric-card" style="border-top-color:#8B5CF6">
+      <div class="m-label">Income Verification Step</div>
+      <div class="m-value" style="color:#8B5CF6">97<span class="m-unit" style="color:#8B5CF6">s</span></div>
+      <div class="m-sub">Avg seconds on <code style="font-size:10px;background:#F5F3FF;padding:1px 4px;border-radius:3px">step=income-verification</code></div>
+      <div class="m-source">Mar 15 – Apr 14, 2026</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#06B6D4">
+      <div class="m-label">Affordable Step</div>
+      <div class="m-value" style="color:#06B6D4">84<span class="m-unit" style="color:#06B6D4">s</span></div>
+      <div class="m-sub">Avg seconds on <code style="font-size:10px;background:#ECFEFF;padding:1px 4px;border-radius:3px">step=affordable</code></div>
+      <div class="m-source">Mar 15 – Apr 14, 2026</div>
     </div>
   </div>
 
@@ -494,14 +511,50 @@
     <p class="note">* Building-level data reflects all-time totals. Date range filter applies to topline cards and trend chart only.</p>
   </div>
 
-  <!-- ── Session Playlist ── -->
-  <div class="section-label">Previous Day's Sessions <a class="lr-badge" href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" rel="noopener">LogRocket · Segment 1307648 <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <!-- ── Denial Reasons ── -->
+  <div class="section-label">Denial Reasons <a class="lr-badge" style="background:#E0F2FE;color:#0369A1" href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/thread/019d872c-79e4-711a-a84b-a5f3dda9b526?scrollToCell=019d92b8-9c8d-7009-b2b5-83453ada486c" target="_blank" rel="noopener">FCT_APPLICATIONS · Snowflake · ELISE.DA <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="charts-row" style="grid-template-columns: 1fr 2fr;">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Denial Reason Breakdown</div>
+        <div class="chart-subtitle">All units &amp; properties · AffordableRecertification</div>
+      </div>
+      <div class="chart-container" style="height:220px" id="denial-chart-wrap">
+        <div class="no-denial-placeholder">
+          <div class="nd-icon">📋</div>
+          <div class="nd-msg">No Denial Data Yet</div>
+          <div class="nd-sub">Zero AffordableRecertification applications have been denied as of April 14, 2026. This chart will populate once denials occur.</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">About Denial Reasons</div>
+        <div class="chart-subtitle">Context &amp; column reference</div>
+      </div>
+      <div style="padding-top:8px">
+        <p style="font-size:13px;color:#374151;line-height:1.6;margin-bottom:12px">As of <strong>April 14, 2026</strong>, there are <strong>0 denied</strong> AffordableRecertification applications across all properties (Park View at Miramar Landing and 5 Oaks). The <code style="font-size:11px;background:#F5F3FF;padding:2px 5px;border-radius:3px">DENIED_TIME</code> column is null for all recertification records.</p>
+        <p style="font-size:13px;color:#374151;line-height:1.6;margin-bottom:12px">When denials begin, data will come from:</p>
+        <div style="background:#F8FAFC;border-radius:8px;padding:14px;border:1px solid #E2E8F0">
+          <div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">affordable_certifications columns</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:10px;font-size:12px"><code style="background:#EDE9FE;color:#6D28D9;padding:2px 6px;border-radius:4px;flex-shrink:0">DENIED_REASON</code><span style="color:#64748B">Structured reason (credit, income, missing verification, evictions, criminal, other)</span></div>
+            <div style="display:flex;gap:10px;font-size:12px"><code style="background:#EDE9FE;color:#6D28D9;padding:2px 6px;border-radius:4px;flex-shrink:0">DENIED_NOTE</code><span style="color:#64748B">Free-text note from the reviewer</span></div>
+            <div style="display:flex;gap:10px;font-size:12px"><code style="background:#EDE9FE;color:#6D28D9;padding:2px 6px;border-radius:4px;flex-shrink:0">DENIED_TIME</code><span style="color:#64748B">Timestamp of denial decision</span></div>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#94A3B8;margin-top:12px">For reference: across all application types in ELISE, top denial reasons are credit (3,007), missing verification (1,148), income (1,035), and other (1,015).</p>
+      </div>
+    </div>
+  </div>
 
-  <div id="lr-fallback-card" class="sessions-card">
+  <!-- ── Session Playlist ── -->
+  <div class="section-label">Session Playlist <a class="lr-badge" href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" rel="noopener">LogRocket · Segment 1307648 <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="sessions-card">
     <div class="sessions-header">
       <div>
         <div class="chart-title">Affordable Recertification Flow Users</div>
-        <div class="chart-subtitle" id="sessions-subtitle">Visited <code style="font-size:11px;background:#F5F3FF;padding:1px 4px;border-radius:3px">step=affordable-questionnaire</code> · time on page &gt; 1s · internal emails excluded · updated daily 9am</div>
+        <div class="chart-subtitle">Visited <code style="font-size:11px;background:#F5F3FF;padding:1px 4px;border-radius:3px">step=affordable-questionnaire</code> · time on page &gt; 1s · internal emails excluded · Mar 15 – Apr 14, 2026</div>
       </div>
       <div class="sessions-search">
         <input class="search-input" id="session-search" type="text" placeholder="Search name or email…" oninput="filterSessions()">
@@ -515,28 +568,6 @@
         <span class="session-count" id="session-count">15 sessions</span>
       </div>
     </div>
-
-    <!-- LogRocket CTA banner -->
-    <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M"
-       target="_blank" rel="noopener"
-       style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(135deg,#1E1B4B,#312E81);border-radius:10px;margin-bottom:18px;text-decoration:none;border:1px solid #4338CA;transition:opacity 0.15s;"
-       onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span style="display:inline-flex;align-items:center;gap:5px;background:#7C3AED;color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;letter-spacing:0.04em;white-space:nowrap;">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white"/></svg>
-          LOGROCKET
-        </span>
-        <div>
-          <div style="color:white;font-size:13px;font-weight:600;">Open Live Session Playlist</div>
-          <div style="color:#A5B4FC;font-size:11px;margin-top:1px;">Segment 1307648 · Affordable Recertification Flow · Last 30 days</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;color:#C4B5FD;font-size:13px;font-weight:600;white-space:nowrap;">
-        Watch sessions
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
     <div style="overflow-x:auto">
       <table class="sessions-table">
         <thead>
@@ -552,18 +583,18 @@
         <tbody id="sessions-tbody"></tbody>
       </table>
     </div>
-    <p class="note">Cached sessions — refresh to pull latest from LogRocket. <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" style="color:#6366F1">View full playlist ↗</a></p>
+    <p class="note">Full segment playlist: <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" style="color:#6366F1">View in LogRocket ↗</a></p>
   </div>
 
 </main>
 
 <footer>
-  Elise AI · Recertification Funnel Dashboard · Hex + LogRocket
+  Elise AI · Recertification Funnel Dashboard · Hex + LogRocket · Last refreshed April 14, 2026
 </footer>
 
 <script>
   // ── Raw Data ──────────────────────────────────────────────────────────────
-  const TODAY = new Date();
+  const TODAY = new Date('2026-04-15');
 
   // ─── Live org IDs ────────────────────────────────────────────────────────────
   // Currently live: 526 (LSCRE / 5 Oaks)
@@ -593,22 +624,22 @@
     { name: '5 Oaks (LSCRE)',                                        residentsStarted:41, certsStarted:17, inProgress:23, approved:2, denied:1 },
   ];
 
-  // sessionsData — updated daily at 10am by the dashboard-logrocket-sessions scheduled task
-  // Last manual refresh: Apr 15, 2026 (via LogRocket MCP · step=affordable-questionnaire · excluding akshayramaswamy1@gmail.com internal tester)
   const sessionsData = [
-    { name: 'Paul Cummings',   email: 'emmanichols081961@gmail.com',          url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d91d0-d80f-7713-a0eb-0b82e566a8e6/0', date: 'Apr 15, 2026 3:44 PM',  browser: 'Chrome 146',        os: 'Android 16',    device: 'Mobile'  },
-    { name: 'Paul Cummings',   email: 'emmanichols081961@gmail.com',          url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d8df6-552b-72fd-b16d-f76b9a90476e/0', date: 'Apr 14, 2026 9:47 PM',  browser: 'Chrome 146',        os: 'Linux x86_64',  device: 'Desktop' },
-    { name: 'Jessica Lanza',   email: 'lanzajessica440@gmail.com',            url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d80ab-b72f-76ad-9303-e965b30683f9/0', date: 'Apr 12, 2026 7:50 AM',  browser: 'Chrome 146',        os: 'Android 13',    device: 'Mobile'  },
-    { name: 'Paul Cummings',   email: 'emmanichols081961@gmail.com',          url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d6a96-0a65-7dde-b628-7cf4508aa7e0/0', date: 'Apr 8, 2026 12:55 AM',  browser: 'Chrome 146',        os: 'Android 16',    device: 'Mobile'  },
-    { name: 'Christopher Smith', email: 'lamarrsmith05@gmail.com',            url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d55a4-036f-74e8-8329-b3d101997391/0', date: 'Apr 3, 2026 11:18 PM',  browser: 'Mobile Safari 18',  os: 'iOS 18.6.2',    device: 'iPhone'  },
-    { name: 'Reno Crenshaw',   email: 'steelcity043@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d541a-0c65-7191-98b1-ce3b234eb238/0', date: 'Apr 3, 2026 4:11 PM',   browser: 'Mobile Safari 16',  os: 'iOS 16.7.15',   device: 'iPhone'  },
-    { name: 'Shykethia Craig', email: 'shycraig11@icloud.com',                url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d5060-f9e5-7b2f-8eec-3cdb8a7eabec/0', date: 'Apr 2, 2026 10:47 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Shalonda Brown',  email: 'poochie0522@gmail.com',                url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d504f-ebaf-71f5-acef-db1005074d7d/0', date: 'Apr 2, 2026 10:28 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Elias Vela',      email: 'elias.vela@lscre.com',                 url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d4097-2308-71a1-8056-2b2908cff018/0', date: 'Mar 30, 2026 9:12 PM',  browser: 'Chrome 146',        os: 'Windows 11',    device: 'Desktop' },
-    { name: 'Sefra Boland',    email: 'sefravboland@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d4059-5450-7b4b-ae67-51700fda596d/0', date: 'Mar 30, 2026 8:04 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Sefra Boland',    email: 'sefravboland@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d403c-6439-7f15-80a6-2e34db597259/0', date: 'Mar 30, 2026 7:33 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Sefra Boland',    email: 'sefravboland@gmail.com',               url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d2662-4526-7865-a294-0d93a6c890ff/0', date: 'Mar 25, 2026 7:04 PM',  browser: 'Mobile Safari 26',  os: 'iOS 18.7',      device: 'iPhone'  },
-    { name: 'Elsie Panameno',  email: 'epanameno@enterpriseresidential.org',  url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d1be1-856b-7823-83e4-14aa65a0f613/0', date: 'Mar 23, 2026 6:08 PM',  browser: 'Edge 146',          os: 'Windows 11',    device: 'Desktop' },
+    { name: 'Jessica Lanza', email: 'lanzajessica440@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d6a96-0a65-7dde-b628-7cf4508aa7e0/0', date: 'Apr 12, 2026 7:50 AM', browser: 'Chrome 146', os: 'Android 13', device: 'Mobile' },
+    { name: 'Paul Cummings', email: 'emmanichols081961@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d6a96-0a65-7dde-b628-7cf4508aa7e0/0', date: 'Apr 8, 2026 12:55 AM', browser: 'Chrome 146', os: 'Android 16', device: 'Mobile' },
+    { name: 'Christopher Smith', email: 'lamarrsmith05@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d55a4-036f-74e8-8329-b3d101997391/0', date: 'Apr 3, 2026 11:18 PM', browser: 'Mobile Safari 18', os: 'iOS 18.6.2', device: 'iPhone' },
+    { name: 'Reno Crenshaw', email: 'steelcity043@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d541a-0c65-7191-98b1-ce3b234eb238/0', date: 'Apr 3, 2026 4:11 PM', browser: 'Mobile Safari 16', os: 'iOS 16.7.15', device: 'iPhone' },
+    { name: 'Shykethia Craig', email: 'shycraig11@icloud.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d5060-f9e5-7b2f-8eec-3cdb8a7eabec/0', date: 'Apr 2, 2026 10:47 PM', browser: 'Mobile Safari 26', os: 'iOS 18.7', device: 'iPhone' },
+    { name: 'Shalonda Brown', email: 'poochie0522@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d504f-ebaf-71f5-acef-db1005074d7d/0', date: 'Apr 2, 2026 10:28 PM', browser: 'Mobile Safari 26', os: 'iOS 18.7', device: 'iPhone' },
+    { name: 'April Alviar', email: 'aalviar@eqr.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d43e4-81f2-756c-85e2-f60f38106523/0', date: 'Mar 31, 2026 12:35 PM', browser: 'Chrome 146', os: 'Mac OS 26.4.0', device: 'Mac' },
+    { name: 'April Alviar', email: 'aalviar@eqr.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d43e2-6fba-70ec-bec1-fa81c3a10bb3/0', date: 'Mar 31, 2026 12:34 PM', browser: 'Chrome Headless 145', os: 'Mac OS 26.4.0', device: 'Mac' },
+    { name: 'April Alviar', email: 'aalviar@eqr.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d43e3-bfd8-7ada-9eef-7243dbe7294a/0', date: 'Mar 31, 2026 12:33 PM', browser: 'Chrome Headless 145', os: 'Mac OS 26.4.0', device: 'Mac' },
+    { name: 'Elias Vela', email: 'elias.vela@lscre.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d4097-2308-71a1-8056-2b2908cff018/0', date: 'Mar 30, 2026 9:12 PM', browser: 'Chrome 146', os: 'Windows 11', device: 'Desktop' },
+    { name: 'Sefra Boland', email: 'sefravboland@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d4059-5450-7b4b-ae67-51700fda596d/0', date: 'Mar 30, 2026 8:04 PM', browser: 'Mobile Safari 26', os: 'iOS 18.7', device: 'iPhone' },
+    { name: 'Sefra Boland', email: 'sefravboland@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d403c-6439-7f15-80a6-2e34db597259/0', date: 'Mar 30, 2026 7:33 PM', browser: 'Mobile Safari 26', os: 'iOS 18.7', device: 'iPhone' },
+    { name: 'Sefra Boland', email: 'sefravboland@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d2662-4526-7865-a294-0d93a6c890ff/0', date: 'Mar 25, 2026 7:04 PM', browser: 'Mobile Safari 26', os: 'iOS 18.7', device: 'iPhone' },
+    { name: 'Elsie Panameno', email: 'epanameno@enterpriseresidential.org', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019d1be1-856b-7823-83e4-14aa65a0f613/0', date: 'Mar 23, 2026 6:08 PM', browser: 'Edge 146', os: 'Windows 11', device: 'Desktop' },
+    { name: 'Olga Dluhakanskaya', email: 'volhadl+lijhkugjhf@gmail.com', url: 'https://app.logrocket.com/0qt8h9/applications-portal/s/6-019cf7e4-c009-70ea-ad05-dc18642add97/0', date: 'Mar 16, 2026 6:24 PM', browser: 'Mobile Safari 26', os: 'iOS 18.7', device: 'iPhone' },
   ];
   // ── Helpers ───────────────────────────────────────────────────────────────
   function filterWeeks(range) {
@@ -877,21 +908,23 @@
   }
 
   function applySessionsUpdate(sessions) {
-    if (!Array.isArray(sessions) || !sessions.length) return;
-    // Replace in-memory data and re-render via the same buildSessionsTable path
-    sessionsData.length = 0;
-    sessions.forEach(s => sessionsData.push(s));
-    // Reset any active search/filter so the full fresh list shows
-    const searchEl = document.getElementById('session-search');
-    const filterEl = document.getElementById('platform-filter');
-    if (searchEl) searchEl.value = '';
-    if (filterEl) filterEl.value = '';
-    buildSessionsTable(sessionsData);
+    const table = document.getElementById('sessions-table-body');
+    if (!table) return;
+    table.innerHTML = '';
+    sessions.forEach(s => {
+      const dev = s.device === 'iPhone' || s.device === 'Mobile' ? '📱' : s.device === 'Mac' ? '💻' : '🖥️';
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><a href="${s.url}" target="_blank" rel="noopener" style="color:#A5B4FC;text-decoration:none;font-weight:500">${s.name}</a><br><span style="color:#64748B;font-size:11px">${s.email}</span></td>
+        <td style="color:#94A3B8;font-size:12px">${s.date}</td>
+        <td style="color:#94A3B8;font-size:12px">${dev} ${s.device}</td>
+        <td style="color:#64748B;font-size:11px">${s.browser}</td>
+        <td style="color:#64748B;font-size:11px">${s.os}</td>`;
+      table.appendChild(row);
+    });
   }
 
-  // ── Refresh Button — Snowflake only ──────────────────────────────────────
-  // No AbortSignal on fetch — Vercel's service worker can't clone AbortSignal via postMessage.
-  // Timeout handled via Promise.race instead.
+  // ── Refresh Button ────────────────────────────────────────────────────────
   async function refreshDashboard() {
     const btn = document.getElementById('refresh-btn');
     const dot = document.querySelector('.refresh-dot');
@@ -899,105 +932,59 @@
     if (dot) dot.classList.add('stale');
     showToast('Fetching latest data…', 30000, 'info');
 
-    const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timed out')), 30000)
-    );
+    const results = { data: null, sessions: null, errors: [] };
 
-    try {
-      const resp = await Promise.race([fetch('/api/data'), timeout]);
+    const [dataResp, sessResp] = await Promise.allSettled([
+      fetch('/api/data',     { signal: AbortSignal.timeout(30000) }),
+      fetch('/api/sessions', { signal: AbortSignal.timeout(15000) }),
+    ]);
 
-      if (!resp.ok) {
-        const body = await resp.json().catch(() => ({}));
-        const msg = body.error || `HTTP ${resp.status}`;
-        showToast('⚠ Snowflake: ' + msg, 9000, 'error');
-        return;
-      }
-
-      const data = await resp.json();
-      applyDataUpdate(data);
-      updateRefreshStamp(data.refreshed_at);
-
-      if (Array.isArray(data.sessionsData) && data.sessionsData.length) {
-        applySessionsUpdate(data.sessionsData);
-        const sub = document.getElementById('sessions-subtitle');
-        if (sub && data.sessions_date) {
-          sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 10am`;
-        }
-        showToast(`✓ Refreshed — Snowflake ✓ · ${data.sessionsData.length} sessions ✓`, 5000, 'success');
-      } else {
-        showToast('✓ Refreshed — Snowflake ✓', 5000, 'success');
-      }
-
-    } catch (err) {
-      const msg = err?.message || String(err) || 'unknown error';
-      showToast('⚠ Snowflake: ' + msg, 9000, 'error');
-    } finally {
-      if (dot) dot.classList.remove('stale');
-      btn.disabled = false;
+    if (dataResp.status === 'fulfilled' && dataResp.value.ok) {
+      results.data = await dataResp.value.json().catch(() => null);
+    } else if (dataResp.status === 'fulfilled') {
+      const body = await dataResp.value.json().catch(() => ({}));
+      results.errors.push('Snowflake: ' + (body.error || dataResp.value.statusText));
+    } else {
+      results.errors.push('Snowflake: ' + (dataResp.reason?.message || 'unreachable'));
     }
+
+    if (sessResp.status === 'fulfilled' && sessResp.value.ok) {
+      results.sessions = await sessResp.value.json().catch(() => null);
+    } else if (sessResp.status === 'fulfilled') {
+      const body = await sessResp.value.json().catch(() => ({}));
+      results.errors.push('LogRocket: ' + (body.error || sessResp.value.statusText));
+    } else {
+      results.errors.push('LogRocket: ' + (sessResp.reason?.message || 'unreachable'));
+    }
+
+    const parts = [];
+    if (results.data) {
+      applyDataUpdate(results.data);
+      parts.push(`Snowflake ✓`);
+      updateRefreshStamp(results.data.refreshed_at);
+    }
+    if (results.sessions) {
+      applySessionsUpdate(results.sessions.sessions || []);
+      parts.push(`${results.sessions.count ?? 0} sessions ✓`);
+    }
+
+    if (parts.length) {
+      showToast('✓ Refreshed — ' + parts.join(' · '), 5000, 'success');
+    } else {
+      showToast('⚠ ' + (results.errors.join(' · ') || 'No data returned'), 9000, 'error');
+    }
+
+    if (dot) dot.classList.remove('stale');
+    btn.disabled = false;
   }
 
   updateRefreshStamp();
-
-  // ── Silent auto-load on page open ────────────────────────────────────────
-  // Fetches the latest Gist data (written daily by scheduled task at 9am) so
-  // the sessions table and Snowflake numbers are always current without the
-  // user needing to click Refresh.
-  async function autoLoad() {
-    try {
-      const resp = await fetch('/api/data');
-      if (!resp.ok) return;
-      const data = await resp.json();
-      if (!data) return;
-
-      // Update Snowflake data silently
-      if (Array.isArray(data.propertyData) && data.propertyData.length) {
-        propertyData.length = 0;
-        data.propertyData.forEach(r => propertyData.push(r));
-        buildPropertyTable();
-        updateCards(sum(propertyData));
-        buildFunnelChart();
-        const filtered = filterWeeks(currentRange);
-        if (filtered.length) updateTrendChart(filtered);
-      }
-
-      // Update timing cards silently
-      if (data.timing) {
-        const t = data.timing;
-        const avgEl  = document.getElementById('m-avg-days');
-        const medEl  = document.getElementById('m-median-days');
-        const nAvgEl = document.getElementById('m-timing-n-avg');
-        const nMedEl = document.getElementById('m-timing-n-median');
-        if (avgEl)  avgEl.innerHTML  = `${t.avgDays ?? '—'}<span class="m-unit" style="color:#0EA5E9">d</span>`;
-        if (medEl)  medEl.innerHTML  = `${t.medianDays ?? '—'}<span class="m-unit" style="color:#8B5CF6">d</span>`;
-        const nLabel = `n = ${t.n} approved record${t.n !== 1 ? 's' : ''} · all-time`;
-        if (nAvgEl) nAvgEl.textContent = nLabel;
-        if (nMedEl) nMedEl.textContent = nLabel;
-      }
-
-      // Update sessions table with yesterday's data from Gist
-      if (Array.isArray(data.sessionsData) && data.sessionsData.length) {
-        applySessionsUpdate(data.sessionsData);
-        const sub = document.getElementById('sessions-subtitle');
-        if (sub && data.sessions_date) {
-          sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 9am`;
-        }
-      }
-
-      // Update refresh timestamp
-      if (data.refreshed_at) updateRefreshStamp(data.refreshed_at);
-
-    } catch (_) {
-      // Silent fail — hardcoded data stays visible
-    }
-  }
 
   // ── Init ──────────────────────────────────────────────────────────────────
   setRange('all');
   buildFunnelChart();
   buildPropertyTable();
   buildSessionsTable(sessionsData);
-  autoLoad(); // silently refresh from Gist in the background
 </script>
 </body>
 </html>
