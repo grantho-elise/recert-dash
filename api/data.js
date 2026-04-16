@@ -7,9 +7,9 @@
 //               https://gist.githubusercontent.com/username/abc123/raw/dashboard_data.json
 //   HEX_API_TOKEN  — (optional) Hex API token to trigger a fresh run on demand
 //   HEX_PROJECT_ID — (optional) override project ID
-//   Source project: https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/thread/019d872c-79e4-711a-a84b-a5f3dda9b526
+//   Source project: https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic
 
-const HEX_PROJECT_ID = process.env.HEX_PROJECT_ID || '019d872c-79e4-711a-a84b-a5f3dda9b526';
+const HEX_PROJECT_ID = process.env.HEX_PROJECT_ID || '019d78f6-2fa0-7003-98b4-8e59c1018d32'; // Recertification Funnel Insights
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

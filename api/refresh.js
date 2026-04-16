@@ -6,7 +6,7 @@
 //   HEX_API_TOKEN  — Hex API token
 //   GIST_URL       — raw GitHub Gist URL for dashboard_data.json
 
-const HEX_PROJECT_ID = '019d872c-79e4-711a-a84b-a5f3dda9b526';
+const HEX_PROJECT_ID = '019d78f6-2fa0-7003-98b4-8e59c1018d32'; // Recertification Funnel Insights
 const POLL_MS        = 4000;   // poll interval
 const DEADLINE_MS    = 55000;  // stay under Vercel's 60 s function limit
 
