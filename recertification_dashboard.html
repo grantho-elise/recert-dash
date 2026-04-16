@@ -80,7 +80,7 @@
     /* ── Metric Cards ── */
     .metric-cards {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 14px;
     }
     .metric-cards-2 {
@@ -94,8 +94,9 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
-    @media (max-width: 1100px) { .metric-cards { grid-template-columns: repeat(3, 1fr); } .metric-cards-3 { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 700px) { .metric-cards { grid-template-columns: repeat(2, 1fr); } .metric-cards-3 { grid-template-columns: 1fr; } }
+    @media (max-width: 1300px) { .metric-cards { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 900px)  { .metric-cards { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px)  { .metric-cards { grid-template-columns: repeat(2, 1fr); } .metric-cards-3 { grid-template-columns: 1fr; } }
 
     .metric-card {
       background: white;
@@ -415,34 +416,62 @@
 <main>
 
   <!-- ── Funnel Metrics (Hex) ── -->
-  <div class="section-label">Recertification Funnel — Topline <a class="lr-badge" style="background:#E0F2FE;color:#0369A1" href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/thread/019d872c-79e4-711a-a84b-a5f3dda9b526?scrollToCell=019d92b8-9c8d-7009-b2b5-83453ada486c" target="_blank" rel="noopener">FCT_APPLICATIONS · Snowflake · ELISE.DA <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="section-label">Certification Status — Totals <a class="lr-badge" style="background:#E0F2FE;color:#0369A1" href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic" target="_blank" rel="noopener">Recertification Funnel Insights · Hex <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
   <div class="metric-cards">
+    <div class="metric-card" style="border-top-color:#94A3B8">
+      <div class="m-label">Pending</div>
+      <div class="m-value" id="m-pending" style="color:#94A3B8">—</div>
+      <div class="m-sub">Not yet started</div>
+    </div>
     <div class="metric-card" style="border-top-color:#6366F1">
-      <div class="m-label">Recertifications Sent</div>
-      <div class="m-value" id="m-residents" style="color:#6366F1">—</div>
-      <div class="m-sub">Recertification process initiated</div>
+      <div class="m-label">Started</div>
+      <div class="m-value" id="m-started" style="color:#6366F1">—</div>
+      <div class="m-sub">Flow initiated</div>
     </div>
     <div class="metric-card" style="border-top-color:#F59E0B">
-      <div class="m-label">In Progress</div>
-      <div class="m-value" id="m-inprogress" style="color:#F59E0B">—</div>
-      <div class="m-sub">Docs submitted or under review</div>
+      <div class="m-label">Docs Requested</div>
+      <div class="m-value" id="m-documents_requested" style="color:#F59E0B">—</div>
+      <div class="m-sub">Documents requested</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#F97316">
+      <div class="m-label">Some Docs Submitted</div>
+      <div class="m-value" id="m-some_documents_submitted" style="color:#F97316">—</div>
+      <div class="m-sub">Partial submission</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#3B82F6">
+      <div class="m-label">Docs Submitted</div>
+      <div class="m-value" id="m-documents_submitted" style="color:#3B82F6">—</div>
+      <div class="m-sub">All documents in</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#8B5CF6">
+      <div class="m-label">Under Review</div>
+      <div class="m-value" id="m-under_review" style="color:#8B5CF6">—</div>
+      <div class="m-sub">Staff reviewing</div>
     </div>
     <div class="metric-card" style="border-top-color:#10B981">
       <div class="m-label">Approved</div>
       <div class="m-value" id="m-approved" style="color:#10B981">—</div>
-      <div class="m-pct" id="m-approved-pct" style="color:#10B981">—</div>
       <div class="m-sub">Certification approved</div>
     </div>
     <div class="metric-card" style="border-top-color:#EF4444">
-      <div class="m-label">Denied</div>
-      <div class="m-value" id="m-denied" style="color:#EF4444">—</div>
-      <div class="m-sub">Certification denied</div>
+      <div class="m-label">Rejected</div>
+      <div class="m-value" id="m-rejected" style="color:#EF4444">—</div>
+      <div class="m-sub">Certification rejected</div>
     </div>
-    <div class="metric-card" style="border-top-color:#3B82F6">
-      <div class="m-label">Certifications Submitted</div>
-      <div class="m-value" id="m-certs" style="color:#3B82F6">—</div>
-      <div class="m-pct" id="m-certs-pct" style="color:#3B82F6">—</div>
-      <div class="m-sub">Across all live properties</div>
+    <div class="metric-card" style="border-top-color:#FB7185">
+      <div class="m-label">Expired</div>
+      <div class="m-value" id="m-expired" style="color:#FB7185">—</div>
+      <div class="m-sub">Deadline passed</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#64748B">
+      <div class="m-label">Withdrawn</div>
+      <div class="m-value" id="m-withdrawn" style="color:#64748B">—</div>
+      <div class="m-sub">Resident withdrew</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#CBD5E1">
+      <div class="m-label">Cancelled</div>
+      <div class="m-value" id="m-cancelled" style="color:#94A3B8">—</div>
+      <div class="m-sub">Admin cancelled</div>
     </div>
   </div>
 
@@ -487,24 +516,31 @@
   <div class="table-card">
     <div class="chart-header">
       <div class="chart-title">Building-Level Recertification Details</div>
-      <div class="chart-subtitle">2 live properties · LSCRE + Enterprise Residential · all-time · ELISE.DA.FCT_APPLICATIONS · Snowflake</div>
+      <div class="chart-subtitle">All-time · by certification_status · <a href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic" target="_blank" style="color:#6366F1;text-decoration:none">Recertification Funnel Insights · Hex ↗</a></div>
     </div>
+    <div style="overflow-x:auto">
     <table class="property-table">
       <thead>
         <tr>
           <th>Building</th>
-          <th>Recertifications Sent</th>
-          <th>In Progress</th>
-          <th>Submitted</th>
-          <th>% Submitted</th>
-          <th>Approved</th>
-          <th>% Approved</th>
-          <th>Denied</th>
+          <th style="color:#94A3B8">Pending</th>
+          <th style="color:#6366F1">Started</th>
+          <th style="color:#F59E0B">Docs Req</th>
+          <th style="color:#F97316">Some Docs</th>
+          <th style="color:#3B82F6">Docs Sub</th>
+          <th style="color:#8B5CF6">Under Rev</th>
+          <th style="color:#10B981">Approved</th>
+          <th style="color:#EF4444">Rejected</th>
+          <th style="color:#FB7185">Expired</th>
+          <th style="color:#64748B">Withdrawn</th>
+          <th style="color:#94A3B8">Cancelled</th>
+          <th>Total</th>
         </tr>
       </thead>
       <tbody id="property-tbody"></tbody>
     </table>
-    <p class="note">* Building-level data reflects all-time totals. Date range filter applies to topline cards and trend chart only.</p>
+    </div>
+    <p class="note">* Building-level data reflects all-time totals.</p>
   </div>
 
   <!-- ── Session Playlist ── -->
@@ -612,14 +648,28 @@
     });
   }
 
+  const STATUSES = [
+    { key: 'pending',                  label: 'Pending',             color: '#94A3B8' },
+    { key: 'started',                  label: 'Started',             color: '#6366F1' },
+    { key: 'documents_requested',      label: 'Docs Requested',      color: '#F59E0B' },
+    { key: 'some_documents_submitted', label: 'Some Docs Submitted', color: '#F97316' },
+    { key: 'documents_submitted',      label: 'Docs Submitted',      color: '#3B82F6' },
+    { key: 'under_review',             label: 'Under Review',        color: '#8B5CF6' },
+    { key: 'approved',                 label: 'Approved',            color: '#10B981' },
+    { key: 'rejected',                 label: 'Rejected',            color: '#EF4444' },
+    { key: 'expired',                  label: 'Expired',             color: '#FB7185' },
+    { key: 'withdrawn',                label: 'Withdrawn',           color: '#64748B' },
+    { key: 'cancelled',                label: 'Cancelled',           color: '#CBD5E1' },
+  ];
+
   function sum(data) {
-    return data.reduce((acc, d) => ({
-      residentsStarted: acc.residentsStarted + d.residentsStarted,
-      certsStarted: acc.certsStarted + d.certsStarted,
-      inProgress: acc.inProgress + d.inProgress,
-      approved: acc.approved + d.approved,
-      denied: acc.denied + d.denied,
-    }), { residentsStarted: 0, certsStarted: 0, inProgress: 0, approved: 0, denied: 0 });
+    const zero = {};
+    STATUSES.forEach(s => { zero[s.key] = 0; });
+    return data.reduce((acc, d) => {
+      const out = {};
+      STATUSES.forEach(s => { out[s.key] = (acc[s.key] || 0) + (d[s.key] || 0); });
+      return out;
+    }, zero);
   }
 
   function pct(num, denom) {
@@ -636,21 +686,19 @@
 
   // ── Topline Cards ─────────────────────────────────────────────────────────
   function updateCards(totals) {
-    document.getElementById('m-residents').textContent  = totals.residentsStarted.toLocaleString();
-    document.getElementById('m-certs').textContent      = totals.certsStarted.toLocaleString();
-    document.getElementById('m-inprogress').textContent = totals.inProgress.toLocaleString();
-    document.getElementById('m-approved').textContent   = totals.approved.toLocaleString();
-    document.getElementById('m-denied').textContent     = totals.denied.toLocaleString();
-    document.getElementById('m-certs-pct').textContent  = pct(totals.certsStarted, totals.residentsStarted);
-    document.getElementById('m-approved-pct').textContent = pct(totals.approved, totals.residentsStarted);
+    STATUSES.forEach(s => {
+      const el = document.getElementById('m-' + s.key);
+      if (el) el.textContent = (totals[s.key] || 0).toLocaleString();
+    });
   }
 
   // ── Trend Chart ───────────────────────────────────────────────────────────
   let currentRange = 'all';
   let trendChart;
   let funnelChart;
-  const COLORS = { residentsStarted:'#6366F1', certsStarted:'#3B82F6', inProgress:'#F59E0B', approved:'#10B981', denied:'#EF4444' };
-  const METRIC_LABELS = { residentsStarted:'Recertifications Sent', certsStarted:'Certifications Submitted', inProgress:'In Progress', approved:'Approved', denied:'Denied' };
+  const COLORS = {};
+  const METRIC_LABELS = {};
+  STATUSES.forEach(s => { COLORS[s.key] = s.color; METRIC_LABELS[s.key] = s.label; });
 
   function updateTrendChart(data) {
     const labels = data.map(d => d.label);
@@ -690,10 +738,11 @@
   // ── Funnel Chart ──────────────────────────────────────────────────────────
   function buildFunnelChart() {
     if (funnelChart) { funnelChart.destroy(); funnelChart = null; }
-    const t = sum(weeklyData);
-    const values = [t.residentsStarted, t.certsStarted, t.inProgress, t.approved, t.denied];
-    const labels = ['Recertifications Sent','Certifications Submitted','In Progress','Approved','Denied'];
-    const colors = Object.values(COLORS);
+    const t = sum(propertyData);
+    const total = STATUSES.reduce((s, st) => s + (t[st.key] || 0), 0);
+    const values = STATUSES.map(s => t[s.key] || 0);
+    const labels = STATUSES.map(s => s.label);
+    const colors = STATUSES.map(s => s.color);
     funnelChart = new Chart(document.getElementById('funnel-chart'), {
       type: 'bar',
       data: { labels, datasets: [{ data: values, backgroundColor: colors.map(c => c+'28'), borderColor: colors, borderWidth: 2, borderRadius: 6, borderSkipped: false }] },
@@ -701,7 +750,7 @@
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: { padding: 12, callbacks: { label: ctx => { const p = values[0]>0 ? ((ctx.parsed.x/values[0])*100).toFixed(1) : 0; return ` ${ctx.parsed.x}  (${p}% of started)`; } } }
+          tooltip: { padding: 12, callbacks: { label: ctx => { const p = total > 0 ? ((ctx.parsed.x / total) * 100).toFixed(1) : 0; return ` ${ctx.parsed.x.toLocaleString()}  (${p}% of total)`; } } }
         },
         scales: {
           x: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { font: { size: 12 }, color: '#64748B' } },
@@ -715,18 +764,22 @@
   function buildPropertyTable() {
     const total = sum(propertyData);
     const rows = [...propertyData, { name: 'Total', ...total, isTotal: true }];
+    const PILL_MAP = {
+      pending: 'pill-gray', started: 'pill-purple', documents_requested: 'pill-amber',
+      some_documents_submitted: 'pill-orange', documents_submitted: 'pill-blue',
+      under_review: 'pill-violet', approved: 'pill-green', rejected: 'pill-red',
+      expired: 'pill-rose', withdrawn: 'pill-gray', cancelled: 'pill-gray',
+    };
     document.getElementById('property-tbody').innerHTML = rows.map(row => {
-      const pctCS = row.residentsStarted > 0 ? ((row.certsStarted/row.residentsStarted)*100).toFixed(1) : '0.0';
-      const pctAp = row.residentsStarted > 0 ? ((row.approved/row.residentsStarted)*100).toFixed(1) : '0.0';
-      return `<tr ${row.isTotal?'class="total-row"':''}>
+      const rowTotal = STATUSES.reduce((s, st) => s + (row[st.key] || 0), 0);
+      const statusCells = STATUSES.map(s => {
+        const v = row[s.key] || 0;
+        return `<td><span class="pill ${PILL_MAP[s.key]}" style="border-color:${s.color}20;color:${s.color};background:${s.color}15">${v.toLocaleString()}</span></td>`;
+      }).join('');
+      return `<tr ${row.isTotal ? 'class="total-row"' : ''}>
         <td><strong>${row.name}</strong></td>
-        <td><span class="pill pill-purple">${row.residentsStarted}</span></td>
-        <td><span class="pill pill-amber">${row.inProgress}</span></td>
-        <td><span class="pill pill-blue">${row.certsStarted}</span></td>
-        <td><div class="bar-wrap"><span style="min-width:38px;font-size:12px;font-weight:600;color:#6D28D9">${pctCS}%</span><div class="bar-bg"><div class="bar-fill" style="width:${Math.min(parseFloat(pctCS),100)}%"></div></div></div></td>
-        <td><span class="pill pill-green">${row.approved}</span></td>
-        <td style="font-size:12px;font-weight:600;color:#065F46">${pctAp}%</td>
-        <td>${row.denied>0?`<span class="pill pill-red">${row.denied}</span>`:`<span class="pill pill-gray">${row.denied}</span>`}</td>
+        ${statusCells}
+        <td><strong>${rowTotal.toLocaleString()}</strong></td>
       </tr>`;
     }).join('');
   }
@@ -888,14 +941,10 @@
 
   // ── Skeleton helpers ─────────────────────────────────────────────────────
   function startSkeleton() {
-    // Topline metric values
-    ['m-residents','m-inprogress','m-approved','m-denied','m-certs'].forEach(id => {
-      const el = document.getElementById(id);
+    // All 11 status cards
+    STATUSES.forEach(s => {
+      const el = document.getElementById('m-' + s.key);
       if (el) el.innerHTML = '<span class="skel skel-value"></span>';
-    });
-    ['m-approved-pct','m-certs-pct'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '<span class="skel skel-pct"></span>';
     });
     // Timing cards
     ['m-avg-days','m-median-days'].forEach(id => {
@@ -907,21 +956,21 @@
       if (el) el.innerHTML = '<span class="skel skel-source"></span>';
     });
 
-    // Property table — 3 shimmer rows × 8 columns
+    // Property table — 3 shimmer rows × 13 columns
     const tbody = document.getElementById('property-tbody');
     if (tbody) {
       tbody.innerHTML = Array(3).fill(0).map(() =>
-        `<tr>${Array(8).fill(0).map((_, i) =>
+        `<tr>${Array(13).fill(0).map((_, i) =>
           `<td><span class="skel skel-cell ${i === 0 ? 'skel-cell-wide' : 'skel-cell-narrow'}"></span></td>`
         ).join('')}</tr>`
       ).join('');
     }
 
-    // Chart containers — shimmer overlay on top of existing canvas
+    // Chart overlays
     ['trend-chart','funnel-chart'].forEach(id => {
       const canvas = document.getElementById(id);
       if (!canvas) return;
-      const wrap = canvas.parentElement; // .chart-container already has position:relative
+      const wrap = canvas.parentElement;
       if (!wrap.querySelector('.chart-skel-overlay')) {
         const overlay = document.createElement('div');
         overlay.className = 'chart-skel-overlay';
@@ -931,13 +980,10 @@
   }
 
   function stopSkeleton() {
-    // Remove chart overlays
     document.querySelectorAll('.chart-skel-overlay').forEach(el => el.remove());
-
-    // If applyDataUpdate didn't fire (error path), restore dash markers
-    ['m-residents','m-inprogress','m-approved','m-denied','m-certs',
-     'm-approved-pct','m-certs-pct'].forEach(id => {
-      const el = document.getElementById(id);
+    // Restore dash markers on error path
+    STATUSES.forEach(s => {
+      const el = document.getElementById('m-' + s.key);
       if (el && el.querySelector('.skel')) el.textContent = '—';
     });
     ['m-avg-days','m-median-days'].forEach(id => {
