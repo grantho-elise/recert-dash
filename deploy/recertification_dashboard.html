@@ -347,6 +347,19 @@
     .skel-sub    { height: 11px; width: 120px; margin-top: 8px; }
     .skel-pct    { height: 14px; width: 48px; margin-top: 4px; }
     .skel-source { height: 10px; width: 100px; margin-top: 6px; }
+    /* chart overlay */
+    .chart-skel-overlay {
+      position: absolute; inset: 0;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      z-index: 10;
+    }
+    /* table skeleton rows */
+    .skel-cell { display: block; height: 13px; border-radius: 4px; }
+    .skel-cell-wide { width: 130px; }
+    .skel-cell-narrow { width: 38px; }
     .no-denial-placeholder {
       display: flex;
       flex-direction: column;
@@ -873,22 +886,88 @@
     buildSessionsTable(sessionsData);
   }
 
-  // ── Refresh Button — Snowflake only ──────────────────────────────────────
-  // No AbortSignal on fetch — Vercel's service worker can't clone AbortSignal via postMessage.
-  // Timeout handled via Promise.race instead.
+  // ── Skeleton helpers ─────────────────────────────────────────────────────
+  function startSkeleton() {
+    // Topline metric values
+    ['m-residents','m-inprogress','m-approved','m-denied','m-certs'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-value"></span>';
+    });
+    ['m-approved-pct','m-certs-pct'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-pct"></span>';
+    });
+    // Timing cards
+    ['m-avg-days','m-median-days'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-value"></span>';
+    });
+    ['m-timing-n-avg','m-timing-n-median'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span class="skel skel-source"></span>';
+    });
+
+    // Property table — 3 shimmer rows × 8 columns
+    const tbody = document.getElementById('property-tbody');
+    if (tbody) {
+      tbody.innerHTML = Array(3).fill(0).map(() =>
+        `<tr>${Array(8).fill(0).map((_, i) =>
+          `<td><span class="skel skel-cell ${i === 0 ? 'skel-cell-wide' : 'skel-cell-narrow'}"></span></td>`
+        ).join('')}</tr>`
+      ).join('');
+    }
+
+    // Chart containers — shimmer overlay on top of existing canvas
+    ['trend-chart','funnel-chart'].forEach(id => {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const wrap = canvas.parentElement; // .chart-container already has position:relative
+      if (!wrap.querySelector('.chart-skel-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'chart-skel-overlay';
+        wrap.appendChild(overlay);
+      }
+    });
+  }
+
+  function stopSkeleton() {
+    // Remove chart overlays
+    document.querySelectorAll('.chart-skel-overlay').forEach(el => el.remove());
+
+    // If applyDataUpdate didn't fire (error path), restore dash markers
+    ['m-residents','m-inprogress','m-approved','m-denied','m-certs',
+     'm-approved-pct','m-certs-pct'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.querySelector('.skel')) el.textContent = '—';
+    });
+    ['m-avg-days','m-median-days'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.querySelector('.skel')) el.textContent = '—';
+    });
+    ['m-timing-n-avg','m-timing-n-median'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.querySelector('.skel')) el.textContent = '— · all-time';
+    });
+  }
+
+  // ── Refresh Button ────────────────────────────────────────────────────────
+  // Calls /api/refresh which triggers the Hex project, waits for completion,
+  // then returns the freshly-written Gist data.  Hex runs typically take 15–45s.
+  // No AbortSignal — Vercel's service worker can't clone it via postMessage.
   async function refreshDashboard() {
     const btn = document.getElementById('refresh-btn');
     const dot = document.querySelector('.refresh-dot');
     btn.disabled = true;
     if (dot) dot.classList.add('stale');
-    showToast('Fetching latest data…', 30000, 'info');
+    startSkeleton();
+    showToast('Running Snowflake query… this takes ~30s', 65000, 'info');
 
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timed out')), 30000)
+      setTimeout(() => reject(new Error('timed out after 65s')), 65000)
     );
 
     try {
-      const resp = await Promise.race([fetch('/api/data'), timeout]);
+      const resp = await Promise.race([fetch('/api/refresh'), timeout]);
 
       if (!resp.ok) {
         const body = await resp.json().catch(() => ({}));
@@ -907,15 +986,16 @@
         if (sub && data.sessions_date) {
           sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 10am`;
         }
-        showToast(`✓ Refreshed — Snowflake ✓ · ${data.sessionsData.length} sessions ✓`, 5000, 'success');
+        showToast(`✓ Refreshed — ${data.sessionsData.length} sessions ✓`, 5000, 'success');
       } else {
-        showToast('✓ Refreshed — Snowflake ✓', 5000, 'success');
+        showToast('✓ Refreshed from Snowflake', 5000, 'success');
       }
 
     } catch (err) {
       const msg = err?.message || String(err) || 'unknown error';
       showToast('⚠ Snowflake: ' + msg, 9000, 'error');
     } finally {
+      stopSkeleton();
       if (dot) dot.classList.remove('stale');
       btn.disabled = false;
     }

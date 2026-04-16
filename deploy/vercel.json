@@ -3,6 +3,9 @@
   "rewrites": [
     { "source": "/", "destination": "/recertification_dashboard.html" }
   ],
+  "functions": {
+    "api/refresh.js": { "maxDuration": 60 }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
