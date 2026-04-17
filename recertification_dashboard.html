@@ -517,65 +517,48 @@
   </div>
 
   <!-- ── Session Playlist ── -->
-  <div class="section-label">Previous Day's Sessions <a class="lr-badge" href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" rel="noopener">LogRocket · Segment 1307648 <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="section-label">Sessions <a class="lr-badge" href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" rel="noopener">LogRocket · Segment 1307648 <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
 
-  <div id="lr-fallback-card" class="sessions-card">
-    <div class="sessions-header">
+  <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M"
+     target="_blank" rel="noopener"
+     style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(135deg,#1E1B4B,#312E81);border-radius:10px;margin-bottom:4px;text-decoration:none;border:1px solid #4338CA;transition:opacity 0.15s;"
+     onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#7C3AED;color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;letter-spacing:0.04em;white-space:nowrap;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white"/></svg>
+        LOGROCKET
+      </span>
       <div>
-        <div class="chart-title">Affordable Recertification Flow Users</div>
-        <div class="chart-subtitle" id="sessions-subtitle">Visited <code style="font-size:11px;background:#F5F3FF;padding:1px 4px;border-radius:3px">step=affordable-questionnaire</code> · time on page &gt; 1s · internal emails excluded · updated daily 9am</div>
-      </div>
-      <div class="sessions-search">
-        <input class="search-input" id="session-search" type="text" placeholder="Search name or email…" oninput="filterSessions()">
-        <select class="filter-select" id="platform-filter" onchange="filterSessions()">
-          <option value="">All Platforms</option>
-          <option value="iPhone">iPhone</option>
-          <option value="Desktop">Desktop</option>
-          <option value="Mobile">Mobile (Android)</option>
-          <option value="Mac">Mac</option>
-        </select>
-        <span class="session-count" id="session-count">15 sessions</span>
+        <div style="color:white;font-size:13px;font-weight:600;">Open Live Session Playlist</div>
+        <div style="color:#A5B4FC;font-size:11px;margin-top:1px;">Segment 1307648 · Affordable Recertification Flow · Last 30 days</div>
       </div>
     </div>
-
-    <!-- LogRocket CTA banner -->
-    <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M"
-       target="_blank" rel="noopener"
-       style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(135deg,#1E1B4B,#312E81);border-radius:10px;margin-bottom:18px;text-decoration:none;border:1px solid #4338CA;transition:opacity 0.15s;"
-       onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span style="display:inline-flex;align-items:center;gap:5px;background:#7C3AED;color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;letter-spacing:0.04em;white-space:nowrap;">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white"/></svg>
-          LOGROCKET
-        </span>
-        <div>
-          <div style="color:white;font-size:13px;font-weight:600;">Open Live Session Playlist</div>
-          <div style="color:#A5B4FC;font-size:11px;margin-top:1px;">Segment 1307648 · Affordable Recertification Flow · Last 30 days</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;color:#C4B5FD;font-size:13px;font-weight:600;white-space:nowrap;">
-        Watch sessions
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
-    <div style="overflow-x:auto">
-      <table class="sessions-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Session</th>
-            <th>Date (UTC)</th>
-            <th>Platform</th>
-          </tr>
-        </thead>
-        <tbody id="sessions-tbody"></tbody>
-      </table>
+    <div style="display:flex;align-items:center;gap:6px;color:#C4B5FD;font-size:13px;font-weight:600;white-space:nowrap;">
+      Watch sessions
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </div>
-    <p class="note">Cached sessions — refresh to pull latest from LogRocket. <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" style="color:#6366F1">View full playlist ↗</a></p>
-  </div>
+  </a>
+
+  <!-- Slack CTA -->
+  <a href="https://meetelise.slack.com/archives/C0ATEB2RLQY"
+     target="_blank" rel="noopener"
+     style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:white;border-radius:10px;margin-top:10px;margin-bottom:4px;text-decoration:none;border:1px solid #E2E8F0;transition:box-shadow 0.15s,border-color 0.15s;"
+     onmouseover="this.style.boxShadow='0 2px 12px rgba(74,21,75,0.1)';this.style.borderColor='#7C3AED'" onmouseout="this.style.boxShadow='';this.style.borderColor='#E2E8F0'">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:#4A154B;color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;letter-spacing:0.04em;white-space:nowrap;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M6 15a2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2h2v2zm1 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-5zm2-8a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2v2H9zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2H4a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5zm8 2a2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2v-2zm-1 0a2 2 0 0 1-2 2 2 2 0 0 1-2-2V5a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5zm-2 8a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2v-2h2zm0-1a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-5z"/></svg>
+        SLACK
+      </span>
+      <div>
+        <div style="color:#1E293B;font-size:13px;font-weight:600;">Join #affordable-recert-alerts</div>
+        <div style="color:#64748B;font-size:11px;margin-top:1px;">Daily updates on users going through the affordable recertification flow</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;color:#7C3AED;font-size:13px;font-weight:600;white-space:nowrap;">
+      Open channel
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </div>
+  </a>
 
   <!-- ── Certification Records ── -->
   <div class="section-label">Certification Records
