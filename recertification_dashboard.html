@@ -429,7 +429,7 @@
           <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
         </svg>
       </span>
-      Refresh Data
+      Load Latest Data
     </button>
   </div>
 </header>
@@ -1072,28 +1072,23 @@
   }
 
   // ── Refresh Button ────────────────────────────────────────────────────────
-  // Calls /api/refresh which triggers the Hex project, waits for completion,
-  // then returns the freshly-written Gist data.  Hex runs typically take 15–45s.
-  // No AbortSignal — Vercel's service worker can't clone it via postMessage.
+  // Reads the latest data from the GitHub Gist (written by running Hex manually).
+  // No Hex API trigger — run the Hex project in Hex first, then click this.
   async function refreshDashboard() {
     const btn = document.getElementById('refresh-btn');
     const dot = document.querySelector('.refresh-dot');
     btn.disabled = true;
     if (dot) dot.classList.add('stale');
     startSkeleton();
-    showToast('Running Snowflake query… this takes ~30s', 65000, 'info');
-
-    const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timed out after 65s')), 65000)
-    );
+    showToast('Fetching latest data…', 5000, 'info');
 
     try {
-      const resp = await Promise.race([fetch('/api/refresh'), timeout]);
+      const resp = await fetch('/api/data');
 
       if (!resp.ok) {
         const body = await resp.json().catch(() => ({}));
         const msg = body.error || `HTTP ${resp.status}`;
-        showToast('⚠ Snowflake: ' + msg, 9000, 'error');
+        showToast('⚠ Could not load data: ' + msg, 9000, 'error');
         return;
       }
 
@@ -1107,14 +1102,13 @@
         if (sub && data.sessions_date) {
           sub.innerHTML = `Previous day · <strong>${data.sessions_date}</strong> · internal emails excluded · auto-refreshed daily 10am`;
         }
-        showToast(`✓ Refreshed — ${data.sessionsData.length} sessions ✓`, 5000, 'success');
-      } else {
-        showToast('✓ Refreshed from Snowflake', 5000, 'success');
       }
+
+      showToast('✓ Dashboard updated from latest Hex run', 5000, 'success');
 
     } catch (err) {
       const msg = err?.message || String(err) || 'unknown error';
-      showToast('⚠ Snowflake: ' + msg, 9000, 'error');
+      showToast('⚠ Could not load data: ' + msg, 9000, 'error');
     } finally {
       stopSkeleton();
       if (dot) dot.classList.remove('stale');
