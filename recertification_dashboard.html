@@ -94,9 +94,8 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
-    @media (max-width: 1300px) { .metric-cards { grid-template-columns: repeat(4, 1fr); } }
-    @media (max-width: 900px)  { .metric-cards { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 600px)  { .metric-cards { grid-template-columns: repeat(2, 1fr); } .metric-cards-3 { grid-template-columns: 1fr; } }
+    @media (max-width: 1200px) { .metric-cards { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 700px)  { .metric-cards { grid-template-columns: repeat(2, 1fr); } .metric-cards-3 { grid-template-columns: 1fr; } }
 
     .metric-card {
       background: white;
@@ -374,6 +373,28 @@
     .no-denial-placeholder .nd-msg { font-size: 13px; font-weight: 600; color: #64748B; }
     .no-denial-placeholder .nd-sub { font-size: 11px; text-align: center; max-width: 280px; }
     footer { text-align: center; padding: 24px; font-size: 11px; color: #94A3B8; }
+
+    /* ── Certification Records Table ── */
+    .cert-table { min-width: 1100px; }
+    .cert-table thead th { text-align: left !important; }
+    .cert-table tbody td { text-align: left !important; font-size: 12px; }
+    .cert-table tbody td.date-cell { white-space: nowrap; color: #64748B; }
+    .view-hex-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid #BFDBFE;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .view-hex-btn:hover { background: #DBEAFE; border-color: #93C5FD; }
   </style>
 </head>
 <body>
@@ -418,77 +439,35 @@
   <!-- ── Funnel Metrics (Hex) ── -->
   <div class="section-label">Certification Status — Totals <a class="lr-badge" style="background:#E0F2FE;color:#0369A1" href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic" target="_blank" rel="noopener">Recertification Funnel Insights · Hex <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
   <div class="metric-cards">
-    <div class="metric-card" style="border-top-color:#94A3B8">
-      <div class="m-label">Pending</div>
-      <div class="m-value" id="m-pending" style="color:#94A3B8">—</div>
-      <div class="m-sub">Not yet started</div>
-    </div>
-    <div class="metric-card" style="border-top-color:#6366F1">
-      <div class="m-label">Started</div>
-      <div class="m-value" id="m-started" style="color:#6366F1">—</div>
-      <div class="m-sub">Flow initiated</div>
-    </div>
-    <div class="metric-card" style="border-top-color:#F59E0B">
-      <div class="m-label">Docs Requested</div>
-      <div class="m-value" id="m-documents_requested" style="color:#F59E0B">—</div>
-      <div class="m-sub">Documents requested</div>
-    </div>
-    <div class="metric-card" style="border-top-color:#F97316">
-      <div class="m-label">Some Docs Submitted</div>
-      <div class="m-value" id="m-some_documents_submitted" style="color:#F97316">—</div>
-      <div class="m-sub">Partial submission</div>
-    </div>
-    <div class="metric-card" style="border-top-color:#3B82F6">
-      <div class="m-label">Docs Submitted</div>
-      <div class="m-value" id="m-documents_submitted" style="color:#3B82F6">—</div>
-      <div class="m-sub">All documents in</div>
-    </div>
-    <div class="metric-card" style="border-top-color:#8B5CF6">
-      <div class="m-label">Under Review</div>
-      <div class="m-value" id="m-under_review" style="color:#8B5CF6">—</div>
-      <div class="m-sub">Staff reviewing</div>
-    </div>
-    <div class="metric-card" style="border-top-color:#10B981">
+    <div class="metric-card" style="border-top-color:#16A34A">
       <div class="m-label">Approved</div>
-      <div class="m-value" id="m-approved" style="color:#10B981">—</div>
+      <div class="m-value" id="m-approved" style="color:#16A34A">—</div>
       <div class="m-sub">Certification approved</div>
     </div>
-    <div class="metric-card" style="border-top-color:#EF4444">
-      <div class="m-label">Rejected</div>
-      <div class="m-value" id="m-rejected" style="color:#EF4444">—</div>
-      <div class="m-sub">Certification rejected</div>
+    <div class="metric-card" style="border-top-color:#2563EB">
+      <div class="m-label">Upcoming</div>
+      <div class="m-value" id="m-upcoming" style="color:#2563EB">—</div>
+      <div class="m-sub">Recertification due soon</div>
     </div>
-    <div class="metric-card" style="border-top-color:#FB7185">
-      <div class="m-label">Expired</div>
-      <div class="m-value" id="m-expired" style="color:#FB7185">—</div>
-      <div class="m-sub">Deadline passed</div>
+    <div class="metric-card" style="border-top-color:#4F46E5">
+      <div class="m-label">Started</div>
+      <div class="m-value" id="m-started" style="color:#4F46E5">—</div>
+      <div class="m-sub">Flow initiated by resident</div>
     </div>
-    <div class="metric-card" style="border-top-color:#64748B">
-      <div class="m-label">Withdrawn</div>
-      <div class="m-value" id="m-withdrawn" style="color:#64748B">—</div>
-      <div class="m-sub">Resident withdrew</div>
+    <div class="metric-card" style="border-top-color:#D97706">
+      <div class="m-label">Application In Progress</div>
+      <div class="m-value" id="m-application_in_progress" style="color:#D97706">—</div>
+      <div class="m-sub">Docs submitted or under review</div>
     </div>
-    <div class="metric-card" style="border-top-color:#CBD5E1">
+    <div class="metric-card" style="border-top-color:#7C3AED">
+      <div class="m-label">Under Agent Review</div>
+      <div class="m-value" id="m-under_agent_review" style="color:#7C3AED">—</div>
+      <div class="m-sub">Agent reviewing application</div>
+    </div>
+    <div class="metric-card" style="border-top-color:#6B7280">
       <div class="m-label">Cancelled</div>
-      <div class="m-value" id="m-cancelled" style="color:#94A3B8">—</div>
+      <div class="m-value" id="m-cancelled" style="color:#6B7280">—</div>
       <div class="m-sub">Admin cancelled</div>
-    </div>
-  </div>
-
-  <!-- ── Avg Certification Timeline (affordable_certifications) ── -->
-  <div class="section-label" style="margin-top:20px">Avg Certification Timeline — Approved Records <a class="lr-badge" style="background:#DCFCE7;color:#166534" href="#" target="_blank" rel="noopener">FCT_APPLICATIONS · Snowflake · ELISE.DA <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
-  <div class="metric-cards-2">
-    <div class="metric-card" style="border-top-color:#0EA5E9">
-      <div class="m-label">Avg Time to Decision</div>
-      <div class="m-value" style="color:#0EA5E9" id="m-avg-days">—</div>
-      <div class="m-sub">From <em>created</em> → <em>approved</em></div>
-      <div class="m-source" style="margin-top:8px" id="m-timing-n-avg">— · all-time</div>
-    </div>
-    <div class="metric-card" style="border-top-color:#8B5CF6">
-      <div class="m-label">Median Time to Decision</div>
-      <div class="m-value" style="color:#8B5CF6" id="m-median-days">—</div>
-      <div class="m-sub">From <em>created</em> → <em>approved</em></div>
-      <div class="m-source" style="margin-top:8px" id="m-timing-n-median">— · all-time</div>
     </div>
   </div>
 
@@ -516,25 +495,19 @@
   <div class="table-card">
     <div class="chart-header">
       <div class="chart-title">Building-Level Recertification Details</div>
-      <div class="chart-subtitle">All-time · by certification_status · <a href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic" target="_blank" style="color:#6366F1;text-decoration:none">Recertification Funnel Insights · Hex ↗</a></div>
+      <div class="chart-subtitle">affordable_certifications JOIN building_details · grouped by property · ordered by approved · <a href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic" target="_blank" style="color:#6366F1;text-decoration:none">Recertification Funnel Insights · Hex ↗</a></div>
     </div>
     <div style="overflow-x:auto">
     <table class="property-table">
       <thead>
         <tr>
           <th>Building</th>
-          <th style="color:#94A3B8">Pending</th>
-          <th style="color:#6366F1">Started</th>
-          <th style="color:#F59E0B">Docs Req</th>
-          <th style="color:#F97316">Some Docs</th>
-          <th style="color:#3B82F6">Docs Sub</th>
-          <th style="color:#8B5CF6">Under Rev</th>
-          <th style="color:#10B981">Approved</th>
-          <th style="color:#EF4444">Rejected</th>
-          <th style="color:#FB7185">Expired</th>
-          <th style="color:#64748B">Withdrawn</th>
-          <th style="color:#94A3B8">Cancelled</th>
-          <th>Total</th>
+          <th style="color:#16A34A">Approved</th>
+          <th style="color:#2563EB">Upcoming</th>
+          <th style="color:#4F46E5">Started</th>
+          <th style="color:#D97706">App In Progress</th>
+          <th style="color:#7C3AED">Under Agent Review</th>
+          <th style="color:#6B7280">Cancelled</th>
         </tr>
       </thead>
       <tbody id="property-tbody"></tbody>
@@ -604,6 +577,55 @@
     <p class="note">Cached sessions — refresh to pull latest from LogRocket. <a href="https://app.logrocket.com/0qt8h9/applications-portal/metric/all-sessions?segmentID=1307648&range=1M" target="_blank" style="color:#6366F1">View full playlist ↗</a></p>
   </div>
 
+  <!-- ── Certification Records ── -->
+  <div class="section-label">Certification Records
+    <a class="lr-badge" style="background:#E0F2FE;color:#0369A1;margin-left:8px"
+       href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic"
+       target="_blank" rel="noopener">
+      affordable_certifications · Hex
+      <svg width="9" height="9" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+  <div class="table-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="chart-title">Recent Certifications</div>
+        <div class="chart-subtitle">affordable_certifications JOIN building_details JOIN residents · latest 20 rows by created_at · all active buildings</div>
+      </div>
+      <a class="view-hex-btn"
+         href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic"
+         target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1H9V4.5M9 1L4 6M2 2H1V9H8V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        View full table in Hex
+      </a>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="cert-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Building</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Decision Date</th>
+          </tr>
+        </thead>
+        <tbody id="cert-tbody">
+          <tr><td colspan="12"><div class="no-data-msg">Loading certification records…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Showing up to 20 most recent records. <a href="https://app.hex.tech/2feafe6d-0334-4e75-b35f-caf2175e2040/hex/Recertification-Funnel-Insights-032xMUNne04Ax33NBjOKjC/draft/logic" target="_blank" style="color:#6366F1">View full table in Hex ↗</a></p>
+  </div>
+
 </main>
 
 <footer>
@@ -635,6 +657,8 @@
 
   // Sessions populated by autoLoad() from Gist — updated daily at 10am by scheduled task
   const sessionsData = [];
+  // Certification records — populated by autoLoad() from Gist (top 20 by created_at DESC)
+  const certificationRecords = [];
   // ── Helpers ───────────────────────────────────────────────────────────────
   function filterWeeks(range) {
     if (range === 'all') return weeklyData;
@@ -648,18 +672,14 @@
     });
   }
 
+  // Matches property_status_df columns exactly
   const STATUSES = [
-    { key: 'pending',                  label: 'Pending',             color: '#94A3B8' },
-    { key: 'started',                  label: 'Started',             color: '#6366F1' },
-    { key: 'documents_requested',      label: 'Docs Requested',      color: '#F59E0B' },
-    { key: 'some_documents_submitted', label: 'Some Docs Submitted', color: '#F97316' },
-    { key: 'documents_submitted',      label: 'Docs Submitted',      color: '#3B82F6' },
-    { key: 'under_review',             label: 'Under Review',        color: '#8B5CF6' },
-    { key: 'approved',                 label: 'Approved',            color: '#10B981' },
-    { key: 'rejected',                 label: 'Rejected',            color: '#EF4444' },
-    { key: 'expired',                  label: 'Expired',             color: '#FB7185' },
-    { key: 'withdrawn',                label: 'Withdrawn',           color: '#64748B' },
-    { key: 'cancelled',                label: 'Cancelled',           color: '#CBD5E1' },
+    { key: 'approved',                label: 'Approved',                color: '#16A34A' }, // green
+    { key: 'upcoming',                label: 'Upcoming',                color: '#2563EB' }, // blue
+    { key: 'started',                 label: 'Started',                 color: '#4F46E5' }, // indigo
+    { key: 'application_in_progress', label: 'Application In Progress', color: '#D97706' }, // amber
+    { key: 'under_agent_review',      label: 'Under Agent Review',      color: '#7C3AED' }, // purple
+    { key: 'cancelled',               label: 'Cancelled',               color: '#6B7280' }, // gray
   ];
 
   function sum(data) {
@@ -764,22 +784,16 @@
   function buildPropertyTable() {
     const total = sum(propertyData);
     const rows = [...propertyData, { name: 'Total', ...total, isTotal: true }];
-    const PILL_MAP = {
-      pending: 'pill-gray', started: 'pill-purple', documents_requested: 'pill-amber',
-      some_documents_submitted: 'pill-orange', documents_submitted: 'pill-blue',
-      under_review: 'pill-violet', approved: 'pill-green', rejected: 'pill-red',
-      expired: 'pill-rose', withdrawn: 'pill-gray', cancelled: 'pill-gray',
-    };
     document.getElementById('property-tbody').innerHTML = rows.map(row => {
-      const rowTotal = STATUSES.reduce((s, st) => s + (row[st.key] || 0), 0);
       const statusCells = STATUSES.map(s => {
         const v = row[s.key] || 0;
-        return `<td><span class="pill ${PILL_MAP[s.key]}" style="border-color:${s.color}20;color:${s.color};background:${s.color}15">${v.toLocaleString()}</span></td>`;
+        return `<td><span class="pill" style="border:1px solid ${s.color}30;color:${s.color};background:${s.color}15;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600">${v.toLocaleString()}</span></td>`;
       }).join('');
+      const _n = v => (v && v !== 'undefined' && v !== 'null' && v !== 'Unknown') ? v : null;
+      const rowName = _n(row.name) || _n(row.property_name) || _n(row.building_name) || _n(row.building) || _n(row.org_name) || _n(row.label) || '—';
       return `<tr ${row.isTotal ? 'class="total-row"' : ''}>
-        <td><strong>${row.name}</strong></td>
+        <td><strong>${rowName}</strong></td>
         ${statusCells}
-        <td><strong>${rowTotal.toLocaleString()}</strong></td>
       </tr>`;
     }).join('');
   }
@@ -904,6 +918,13 @@
       data.weeklyData.forEach(r => weeklyData.push(r));
     }
 
+    // Certification records
+    if (Array.isArray(data.certificationRecords)) {
+      certificationRecords.length = 0;
+      data.certificationRecords.forEach(r => certificationRecords.push(r));
+      buildCertificationTable();
+    }
+
     // Rebuild charts + table if we got new data
     if (propertyData.length || weeklyData.length) {
       setRange(currentRange);
@@ -926,6 +947,60 @@
     }
   }
 
+  // ── Certification Records Table ───────────────────────────────────────────
+  const STATUS_COLOR_MAP = {};
+  STATUSES.forEach(s => { STATUS_COLOR_MAP[s.key] = s.color; });
+
+  function fmtDate(val) {
+    if (!val) return '<span style="color:#CBD5E1">—</span>';
+    const s = String(val).slice(0, 10);
+    if (s === '0001-01-01' || s === 'null' || s === 'undefined') return '<span style="color:#CBD5E1">—</span>';
+    return s;
+  }
+
+  function certStatusPill(status) {
+    if (!status) return '<span style="color:#CBD5E1">—</span>';
+    const key = status.toLowerCase().replace(/\s+/g, '_');
+    const color = STATUS_COLOR_MAP[key] || '#6B7280';
+    return `<span class="pill" style="border:1px solid ${color}30;color:${color};background:${color}15;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap">${status}</span>`;
+  }
+
+  function buildCertificationTable() {
+    const tbody = document.getElementById('cert-tbody');
+    if (!tbody) return;
+    if (!certificationRecords.length) {
+      tbody.innerHTML = `<tr><td colspan="12"><div class="no-data-msg">No certification records — refresh to load data from Hex.</div></td></tr>`;
+      return;
+    }
+    const rows = certificationRecords.slice(0, 20);
+    tbody.innerHTML = rows.map((r, i) => {
+      const fn = r.first_name || '<span style="color:#CBD5E1">—</span>';
+      const ln = r.last_name  || '<span style="color:#CBD5E1">—</span>';
+      const em = r.email
+        ? `<a href="mailto:${r.email}" style="color:#374151;text-decoration:none">${r.email}</a>`
+        : '<span style="color:#CBD5E1">—</span>';
+      const bld  = r.building_name || '<span style="color:#CBD5E1">—</span>';
+      const type = r.certification_type
+        ? `<span style="font-size:11px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:4px;padding:2px 6px;color:#374151">${r.certification_type}</span>`
+        : '<span style="color:#CBD5E1">—</span>';
+      const status = certStatusPill(r.status);
+      return `<tr>
+        <td style="color:#94A3B8;font-size:12px">${i + 1}</td>
+        <td>${fn}</td>
+        <td>${ln}</td>
+        <td style="font-size:11px">${em}</td>
+        <td style="font-size:12px">${bld}</td>
+        <td>${type}</td>
+        <td>${status}</td>
+        <td class="date-cell">${fmtDate(r.created_at)}</td>
+        <td class="date-cell">${fmtDate(r.updated_at)}</td>
+        <td class="date-cell">${fmtDate(r.start_date)}</td>
+        <td class="date-cell">${fmtDate(r.end_date)}</td>
+        <td class="date-cell">${fmtDate(r.decision_date)}</td>
+      </tr>`;
+    }).join('');
+  }
+
   function applySessionsUpdate(sessions) {
     if (!Array.isArray(sessions) || !sessions.length) return;
     // Replace in-memory data and re-render via the same buildSessionsTable path
@@ -941,7 +1016,7 @@
 
   // ── Skeleton helpers ─────────────────────────────────────────────────────
   function startSkeleton() {
-    // All 11 status cards
+    // Status cards + total card
     STATUSES.forEach(s => {
       const el = document.getElementById('m-' + s.key);
       if (el) el.innerHTML = '<span class="skel skel-value"></span>';
@@ -956,11 +1031,11 @@
       if (el) el.innerHTML = '<span class="skel skel-source"></span>';
     });
 
-    // Property table — 3 shimmer rows × 13 columns
+    // Property table — 3 shimmer rows × 7 columns (building + 6 statuses)
     const tbody = document.getElementById('property-tbody');
     if (tbody) {
       tbody.innerHTML = Array(3).fill(0).map(() =>
-        `<tr>${Array(13).fill(0).map((_, i) =>
+        `<tr>${Array(7).fill(0).map((_, i) =>
           `<td><span class="skel skel-cell ${i === 0 ? 'skel-cell-wide' : 'skel-cell-narrow'}"></span></td>`
         ).join('')}</tr>`
       ).join('');
@@ -1082,6 +1157,7 @@
   buildFunnelChart();
   buildPropertyTable();
   buildSessionsTable(sessionsData);
+  buildCertificationTable();
   autoLoad(); // silently refresh from Gist in the background
 </script>
 </body>
