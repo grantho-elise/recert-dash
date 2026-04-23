@@ -666,7 +666,6 @@
   }
 
   // ── Trend Chart ───────────────────────────────────────────────────────────
-  let currentRange = 'all';
   let trendChart;
   let funnelChart;
   const COLORS = {};
@@ -840,7 +839,8 @@
 
     // Rebuild charts + table if we got new data
     if (propertyData.length || weeklyData.length) {
-      setRange(currentRange);
+      updateCards(sum(propertyData));
+      if (weeklyData.length) { document.getElementById('trend-chart').style.display = ''; updateTrendChart(weeklyData); } else { document.getElementById('trend-chart').style.display = 'none'; }
       buildFunnelChart();
       buildPropertyTable();
     }
@@ -1060,7 +1060,8 @@
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
-  setRange('all');
+  updateCards(sum(propertyData));
+  if (weeklyData.length) { document.getElementById('trend-chart').style.display = ''; updateTrendChart(weeklyData); } else { document.getElementById('trend-chart').style.display = 'none'; }
   buildFunnelChart();
   buildPropertyTable();
   buildSessionsTable(sessionsData);
