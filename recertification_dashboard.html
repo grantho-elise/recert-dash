@@ -33,24 +33,6 @@
       letter-spacing: 0.02em;
     }
 
-    /* ── Date Controls ── */
-    .date-controls { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
-    .preset-btns { display: flex; gap: 6px; }
-    .date-btn {
-      padding: 6px 14px;
-      border-radius: 6px;
-      border: 1px solid #334155;
-      background: transparent;
-      color: #94A3B8;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 500;
-      transition: all 0.15s;
-    }
-    .date-btn:hover { border-color: #6366F1; color: white; }
-    .date-btn.active { background: #6366F1; border-color: #6366F1; color: white; }
-    .custom-range { display: none; gap: 8px; align-items: center; }
-    .custom-range.show { display: flex; }
     .custom-range label { font-size: 11px; color: #64748B; }
     .custom-range input[type="date"] {
       padding: 5px 10px;
@@ -408,19 +390,7 @@
     <p>Sources: ELISE.DA.FCT_APPLICATIONS · Snowflake · application_type=AffordableRecertification · is_test=FALSE · all-time · 2 live orgs: LSCRE + Enterprise Residential</p>
     <div class="refresh-stamp"><span class="refresh-dot"></span> Last refreshed: <span id="refresh-ts">—</span></div>
   </div>
-  <div class="date-controls">
-    <div class="preset-btns">
-      <button class="date-btn active" onclick="setRange('all')">All Time</button>
-      <button class="date-btn" onclick="setRange('30d')">Last 30 Days</button>
-      <button class="date-btn" onclick="setRange('7d')">Last 7 Days</button>
-      <button class="date-btn" onclick="setRange('custom')">Custom</button>
-    </div>
-    <div class="custom-range" id="custom-range">
-      <label>From</label>
-      <input type="date" id="date-from" onchange="applyCustomRange()" min="2026-03-16">
-      <label>To</label>
-      <input type="date" id="date-to" onchange="applyCustomRange()" min="2026-03-16">
-    </div>
+  <div style="display:flex;align-items:center;">
     <button class="refresh-btn" id="refresh-btn" onclick="refreshDashboard()">
       <span class="refresh-icon">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
@@ -818,46 +788,6 @@
       return matchText && matchPlatform;
     });
     buildSessionsTable(filtered);
-  }
-
-  // ── Range Logic ───────────────────────────────────────────────────────────
-  function setRange(range) {
-    if (range !== 'custom') currentRange = range;
-    document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-    const btnMap = { all:0, '30d':1, '7d':2, custom:3 };
-    document.querySelectorAll('.date-btn')[btnMap[range]].classList.add('active');
-    const customEl = document.getElementById('custom-range');
-    if (range === 'custom') { customEl.classList.add('show'); return; }
-    customEl.classList.remove('show');
-    const labels = { all:'All Time', '30d':'Last 30 Days', '7d':'Last 7 Days' };
-    document.getElementById('period-badge').textContent = labels[range];
-    document.getElementById('trend-subtitle').textContent = `${labels[range]} · data bucketed by event date`;
-    // Top-line cards always reflect the full property table totals (independent of chart filter)
-    updateCards(sum(propertyData));
-    const filtered = filterWeeks(range);
-    if (!filtered.length) {
-      document.getElementById('trend-chart').style.display = 'none';
-    } else {
-      document.getElementById('trend-chart').style.display = '';
-      updateTrendChart(filtered);
-    }
-  }
-
-  function applyCustomRange() {
-    const from = document.getElementById('date-from').value;
-    const to = document.getElementById('date-to').value;
-    if (!from || !to || from > to) return;
-    document.getElementById('period-badge').textContent = `${from} → ${to}`;
-    document.getElementById('trend-subtitle').textContent = `${from} → ${to} · data bucketed by event date`;
-    // Top-line cards always reflect the full property table totals (independent of chart filter)
-    updateCards(sum(propertyData));
-    const filtered = filterWeeks({ from, to });
-    if (!filtered.length) {
-      document.getElementById('trend-chart').style.display = 'none';
-    } else {
-      document.getElementById('trend-chart').style.display = '';
-      updateTrendChart(filtered);
-    }
   }
 
   // ── Refresh Timestamp ────────────────────────────────────────────────────
